@@ -6,7 +6,7 @@ export const todolistsReducer = (state: Array<TodolistType>, action: UnionTodoli
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.payload.id)
         case 'ADD-TODOLIST':
-            const newTodolistId = v1();
+            const newTodolistId = action.payload.todolistId;
             const newTodolist: TodolistType = {id: newTodolistId, title: action.payload.title, filter: 'all'};
             return [...state, newTodolist];
         case 'CHANGE-TODOLIST-FILTER':
@@ -36,7 +36,8 @@ export const addTodolistAC = (title: string) => {
     return {
         type: 'ADD-TODOLIST',
         payload: {
-            title
+            title,
+            todolistId: v1()
         }
     } as const
 }
