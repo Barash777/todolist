@@ -2,15 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-// import App from './App';
-// import AppWithReducer from './AppWithReducer';
-import AppWithRedux from './AppWithRedux';
+import App from './App';
 import {Provider} from 'react-redux';
 import {store} from './state/state';
 
 ReactDOM.render(
     <Provider store={store}>
-        <AppWithRedux/>
+        <App/>
     </Provider>,
     document.getElementById('root'));
 
