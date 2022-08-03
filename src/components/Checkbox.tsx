@@ -5,7 +5,8 @@ export type CheckboxPropsType = {
     checked: boolean
 }
 
-const Checkbox = (props: CheckboxPropsType) => {
+const Checkbox = React.memo((props: CheckboxPropsType) => {
+    console.log('Checkbox')
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         let newIsDoneValue = e.currentTarget.checked;
@@ -15,6 +16,6 @@ const Checkbox = (props: CheckboxPropsType) => {
     return (
         <input type="checkbox" onChange={onChangeHandler} checked={props.checked}/>
     );
-};
+});
 
 export default Checkbox;

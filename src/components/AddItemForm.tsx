@@ -4,17 +4,18 @@ type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-export function AddItemForm(props: AddItemFormPropsType) {
+export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+    console.log('AddItemForm')
 
-    let [title, setTitle] = useState("")
+    let [title, setTitle] = useState('')
     let [error, setError] = useState<string | null>(null)
 
     const addItem = () => {
-        if (title.trim() !== "") {
+        if (title.trim() !== '') {
             props.addItem(title);
-            setTitle("");
+            setTitle('');
         } else {
-            setError("Title is required");
+            setError('Title is required');
         }
     }
 
@@ -22,9 +23,9 @@ export function AddItemForm(props: AddItemFormPropsType) {
         setTitle(e.currentTarget.value)
     }
 
-    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null);
-        if (e.charCode === 13) {
+    const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        error && setError(null);
+        if (e.key === 'Enter') {
             addItem();
         }
     }
@@ -32,11 +33,11 @@ export function AddItemForm(props: AddItemFormPropsType) {
     return <div>
         <input value={title}
                onChange={onChangeHandler}
-               onKeyPress={onKeyPressHandler}
-               className={error ? "error" : ""}
+               onKeyDown={onKeyDownHandler}
+               className={error ? 'error' : ''}
         />
         <button onClick={addItem}>+</button>
 
         {error && <div className="error-message">{error}</div>}
     </div>
-}
+})

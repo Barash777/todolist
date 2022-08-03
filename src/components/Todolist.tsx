@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {FilterValuesType, TodolistType} from '../App';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import Checkbox from './Checkbox';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppStateType} from '../state/state';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from '../state/tasks-reducer';
+import {AppStateType} from '../state/store';
+import {addTaskAC} from '../state/tasks-reducer';
 import {changeFilterAC, changeTodolistTitleAC, removeTodolistAC} from '../state/todolists-reducer';
+import Task from './Task';
 
 export type TaskType = {
     id: string
@@ -18,71 +18,93 @@ type PropsType = {
     todolist: TodolistType
 }
 
-export function Todolist(props: PropsType) {
+export const Todolist = React.memo((props: PropsType) => {
+    console.log('Todolist')
     const {id, title, filter} = props.todolist
 
-    const tasks = useSelector<AppStateType, Array<TaskType>>(state => state.tasks[id])
+    let tasks = useSelector<AppStateType, Array<TaskType>>(state => state.tasks[id])
     // const tasks2 = useSelector<AppStateType, Array<TaskType>>(state => state.tasks[id])
-
-    // console.log(tasks)
     // console.log('t === t2', tasks === tasks2)
 
-    // tasks = [{id: 'test', title: 'from code', isDone: false}]
+    /*const addTaskStraight = () => {
+        tasks = [...tasks, {id: v1(), title: 'from code', isDone: false}]
+        console.log(tasks, tasks2)
+    }*/
 
-    let filteredTasks = tasks
-    if (filter === 'active') {
-        filteredTasks = tasks.filter(t => !t.isDone);
-    }
-    if (filter === 'completed') {
-        filteredTasks = tasks.filter(t => t.isDone);
-    }
+    // let filteredTasks = tasks
+
 
     // console.log('t === filtered', tasks === filteredTasks)
 
     const dispatch = useDispatch()
 
-    const addTask = (title: string) => {
+
+    const addTask = useCallback((title: string) => {
         dispatch(addTaskAC(title, id))
-    }
-
-    const removeTodolist = () => {
+    }, [dispatch])
+    const removeTodolist = useCallback(() => {
         dispatch(removeTodolistAC(id))
-    }
-    const changeTodolistTitle = (title: string) => {
+    }, [dispatch])
+    const changeTodolistTitle = useCallback((title: string) => {
         dispatch(changeTodolistTitleAC(id, title))
+    }, [dispatch])
+
+    /*const onChangeFilterHandler = useCallback((value: FilterValuesType) => {
+        dispatch(changeFilterAC(id, value))
+    }, [dispatch])*/
+    const onChangeFilterHandler = (value: FilterValuesType) => {
+        dispatch(changeFilterAC(id, value))
     }
 
-    const onChangeFilterHandler = (value: FilterValuesType) => dispatch(changeFilterAC(id, value))
 
-    const onChangeTaskStatusHandler = (taskID: string, checked: boolean) => {
-        // props.changeTaskStatus(taskID, checked, props.id);
-        dispatch(changeTaskStatusAC(taskID, checked, id))
+    /*const onChangeFilterAllHandler = useCallback(() => {
+        dispatch(changeFilterAC(id, 'all'))
+    }, [dispatch])
+    const onChangeFilterActiveHandler = useCallback(() => {
+        dispatch(changeFilterAC(id, 'active'))
+    }, [dispatch])
+    const onChangeFilterCompletedHandler = useCallback(() => {
+        dispatch(changeFilterAC(id, 'completed'))
+    }, [dispatch])*/
+
+
+    const tasksJSX = useMemo(() => {
+        console.log('TASKS MEMO')
+        if (filter === 'active') {
+            tasks = tasks.filter(t => !t.isDone);
+        }
+        if (filter === 'completed') {
+            tasks = tasks.filter(t => t.isDone);
+        }
+
+        return (
+            <ul>
+                {tasks.map(t => <Task key={t.id} task={t} todolistId={id}/>)}
+            </ul>
+        )
+    }, [tasks, filter])
+
+    /*if (filter === 'active') {
+        tasks = tasks.filter(t => !t.isDone);
     }
+    if (filter === 'completed') {
+        tasks = tasks.filter(t => t.isDone);
+    }
+
+    const tasksJSX = (
+        <ul>
+            {tasks.map(t => <Task key={t.id} task={t} todolistId={id}/>)}
+        </ul>
+    )*/
+
 
     return <div>
-        <h3><EditableSpan value={title} onChange={changeTodolistTitle}/>
+        <h3>
+            <EditableSpan value={title} onChange={changeTodolistTitle}/>
             <button onClick={removeTodolist}>x</button>
         </h3>
         <AddItemForm addItem={addTask}/>
-        <ul>
-            {
-                filteredTasks.map(t => {
-                    const onClickHandler = () => dispatch(removeTaskAC(t.id, id))
-
-                    const onTitleChangeHandler = (newTitle: string) => {
-                        dispatch(changeTaskTitleAC(t.id, id, newTitle))
-                    }
-
-                    return <li key={t.id} className={t.isDone ? 'is-done' : ''}>
-                        {/*<input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>*/}
-                        <Checkbox onChange={(checked) => onChangeTaskStatusHandler(t.id, checked,)}
-                                  checked={t.isDone}/>
-                        <EditableSpan value={t.title} onChange={onTitleChangeHandler}/>
-                        <button onClick={onClickHandler}>x</button>
-                    </li>
-                })
-            }
-        </ul>
+        {tasksJSX}
         <div>
             <button className={filter === 'all' ? 'active-filter' : ''}
                     onClick={() => onChangeFilterHandler('all')}>All
@@ -93,8 +115,20 @@ export function Todolist(props: PropsType) {
             <button className={filter === 'completed' ? 'active-filter' : ''}
                     onClick={() => onChangeFilterHandler('completed')}>Completed
             </button>
+
+            {/*<button className={filter === 'all' ? 'active-filter' : ''}
+                    onClick={onChangeFilterAllHandler}>All
+            </button>
+            <button className={filter === 'active' ? 'active-filter' : ''}
+                    onClick={onChangeFilterActiveHandler}>Active
+            </button>
+            <button className={filter === 'completed' ? 'active-filter' : ''}
+                    onClick={onChangeFilterCompletedHandler}>Completed
+            </button>*/}
+
+            {/*<button onClick={addTaskStraight}>Add</button>*/}
         </div>
     </div>
-}
+})
 
 
