@@ -22,9 +22,9 @@ const rootReducer = combineReducers({
 })
 
 const initialGlobalState = {
-    todolists: [
-        {id: 'todolistId1', title: 'What to learn', filter: 'all'},
-        {id: 'todolistId2', title: 'What to buy', filter: 'all'}
+    /*todolists: [
+        {id: 'todolistId1', title: 'What to learn', filter: 'all', addedDate: '', order: 0},
+        {id: 'todolistId2', title: 'What to buy', filter: 'all', addedDate: '', order: 0}
     ],
     tasks: {
         ['todolistId1']: [
@@ -35,7 +35,7 @@ const initialGlobalState = {
             {id: v1(), title: 'Milk', isDone: true},
             {id: v1(), title: 'React Book', isDone: true}
         ]
-    }
+    }*/
 }
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState as AppStateType)

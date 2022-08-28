@@ -1,11 +1,11 @@
 import {TasksStateType} from '../App';
-import {v1} from 'uuid';
-import {TaskType} from '../components/Todolist';
-import {AddTodolistACType, RemoveTodolistACType} from './todolists-reducer';
+import {AddTodolistACType, RemoveTodolistACType, setTodolistsAC, SetTodolistsACType} from './todolists-reducer';
+import {AppStateType, AppThunk} from './store';
+import {TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
 
 const initialState: TasksStateType = {}
 
-export const tasksReducer = (state: TasksStateType = initialState, action: UnionACType): TasksStateType => {
+export const tasksReducer = (state: TasksStateType = initialState, action: UnionTasksActionType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK':
             return {
@@ -13,10 +13,10 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Union
                 [action.payload.todolistId]: state[action.payload.todolistId].filter(t => t.id !== action.payload.taskId)
             }
         case 'ADD-TASK': {
-            const newTask: TaskType = {id: v1(), title: action.payload.title, isDone: false}
+            // const newTask: TaskType = {id: v1(), title: action.payload.title, isDone: false}
             return {
                 ...state,
-                [action.payload.todolistId]: [newTask, ...state[action.payload.todolistId]]
+                [action.payload.task.todoListId]: [action.payload.task, ...state[action.payload.task.todoListId]]
             }
         }
         case 'CHANGE-TASK-STATUS':
@@ -38,7 +38,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Union
                     } : t)
             }
         case 'ADD-TODOLIST': {
-            const newId = action.payload.todolistId
+            const newId = action.payload.todolist.id
             return {
                 ...state,
                 [newId]: []
@@ -53,17 +53,53 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Union
             const {[action.payload.id]: remove, ...rest} = copy;
             return rest*/
         }
+        case 'SET-TODOLISTS': {
+            const copy = {...state}
+            action.payload.todolists.forEach(t => {
+                copy[t.id] = [];
+            })
+            return copy
+        }
+        case 'SET-TASKS': {
+            return {
+                ...state,
+                [action.payload.todolistId]: action.payload.tasks
+            }
+        }
+        case 'UPDATE-TASK': {
+            return {
+                ...state,
+                [action.payload.todolistId]: state[action.payload.todolistId].map(t => {
+                    return t.id === action.payload.taskId
+                        ? {...t, ...action.payload.model}
+                        : t
+                })
+            }
+        }
         default:
             return state
     }
 }
 
-export type UnionACType = RemoveTaskACType | AddTaskACType |
-    ChangeTaskStatusACType | ChangeTaskTitleACType |
-    AddTodolistACType | RemoveTodolistACType
+export type UnionTasksActionType =
+    RemoveTaskACType |
+    AddTaskACType |
+    ChangeTaskStatusACType |
+    ChangeTaskTitleACType |
+    AddTodolistACType |
+    RemoveTodolistACType |
+    SetTodolistsACType |
+    SetTasksACType |
+    UpdateTaskACType
 
 export type RemoveTaskACType = ReturnType<typeof removeTaskAC>
-export const removeTaskAC = (taskId: string, todolistId: string) => {
+export type AddTaskACType = ReturnType<typeof addTaskAC>
+export type ChangeTaskStatusACType = ReturnType<typeof changeTaskStatusAC>
+export type ChangeTaskTitleACType = ReturnType<typeof changeTaskTitleAC>
+export type SetTasksACType = ReturnType<typeof setTasksAC>
+export type UpdateTaskACType = ReturnType<typeof updateTaskAC>
+
+export const removeTaskAC = (todolistId: string, taskId: string) => {
     return {
         type: 'REMOVE-TASK',
         payload: {
@@ -73,18 +109,15 @@ export const removeTaskAC = (taskId: string, todolistId: string) => {
     } as const
 }
 
-export type AddTaskACType = ReturnType<typeof addTaskAC>
-export const addTaskAC = (title: string, todolistId: string) => {
+export const addTaskAC = (task: TaskType) => {
     return {
         type: 'ADD-TASK',
         payload: {
-            title,
-            todolistId
+            task
         }
     } as const
 }
 
-export type ChangeTaskStatusACType = ReturnType<typeof changeTaskStatusAC>
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string) => {
     return {
         type: 'CHANGE-TASK-STATUS',
@@ -95,8 +128,6 @@ export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: 
         }
     } as const
 }
-
-export type ChangeTaskTitleACType = ReturnType<typeof changeTaskTitleAC>
 export const changeTaskTitleAC = (taskId: string, todolistId: string, title: string) => {
     return {
         type: 'CHANGE-TASK-TITLE',
@@ -107,3 +138,69 @@ export const changeTaskTitleAC = (taskId: string, todolistId: string, title: str
         }
     } as const
 }
+export const setTasksAC = (todolistId: string, tasks: TaskType[]) => {
+    return {
+        type: 'SET-TASKS',
+        payload: {
+            todolistId,
+            tasks
+        }
+    } as const
+}
+export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateTaskModelType) => {
+    return {
+        type: 'UPDATE-TASK',
+        payload: {
+            todolistId,
+            taskId,
+            model
+        }
+    } as const
+}
+
+
+// THUNKS
+export const getTasksTC = (todolistId: string): AppThunk => (dispatch) => {
+    todolistsAPI
+        .getTasks(todolistId)
+        .then(res => {
+            dispatch(setTasksAC(todolistId, res.data.items))
+        })
+}
+export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
+    todolistsAPI
+        .deleteTask(todolistId, taskId)
+        .then(res => {
+            dispatch(removeTaskAC(todolistId, taskId))
+        })
+}
+export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispatch) => {
+    todolistsAPI
+        .createTask(todolistId, title)
+        .then(res => {
+            // dispatch(removeTaskAC(todolistId, taskId))
+            dispatch(addTaskAC(res.data.data.item))
+        })
+}
+export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTaskModelType): AppThunk =>
+    (dispatch, getState: () => AppStateType) => {
+
+        const task = getState().tasks[todolistId].find(t => t.id === taskId)
+
+        if (task) {
+            todolistsAPI
+                .updateTask(todolistId, taskId, {
+                    title: task.title,
+                    deadline: task.deadline,
+                    description: task.description,
+                    priority: task.priority,
+                    status: task.status,
+                    startDate: task.startDate,
+                    ...model
+                })
+                .then(res => {
+                    dispatch(updateTaskAC(todolistId, taskId, model))
+                })
+        }
+
+    }

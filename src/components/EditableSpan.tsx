@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 type EditableSpanPropsType = {
     value: string
@@ -23,7 +23,19 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
         setTitle(e.currentTarget.value)
     }
 
+    const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            activateViewMode();
+        }
+    }
+
     return editMode
-        ? <input value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode}/>
+        ? <input
+            value={title}
+            onChange={changeTitle}
+            autoFocus
+            onBlur={activateViewMode}
+            onKeyDown={onKeyDownHandler}
+        />
         : <span onDoubleClick={activateEditMode}>{props.value}</span>
 })

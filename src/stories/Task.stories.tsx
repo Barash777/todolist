@@ -6,7 +6,8 @@ import Task from '../components/Task';
 import {DecoratorProvider} from './DecoratorProvider';
 import {useSelector} from 'react-redux';
 import {AppStateType} from '../state/store';
-import {TaskType} from '../components/Todolist';
+import {TaskType} from '../api/todolists-api';
+// import {TaskType} from '../components/Todolist';
 
 const cb = action('button clicked')
 

@@ -1,9 +1,10 @@
 import React, {useCallback} from 'react';
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from '../state/tasks-reducer';
+import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, removeTaskTC, updateTaskTC} from '../state/tasks-reducer';
 import Checkbox from './Checkbox';
 import {EditableSpan} from './EditableSpan';
 import {useDispatch} from 'react-redux';
-import {TaskType} from './Todolist';
+import {TaskStatuses, TaskType} from '../api/todolists-api';
+import {useAppDispatch} from '../app/hooks';
 
 export type TaskPropsType = {
     task: TaskType
@@ -12,24 +13,28 @@ export type TaskPropsType = {
 
 const Task = React.memo(({task, todolistId}: TaskPropsType) => {
     console.log('Task')
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const onClickHandler = () =>
-        dispatch(removeTaskAC(task.id, todolistId))
+    const onClickDeleteHandler = () => {
+        dispatch(removeTaskTC(todolistId, task.id))
+    }
 
-    const onTitleChangeHandler = useCallback((newTitle: string) => {
-        dispatch(changeTaskTitleAC(task.id, todolistId, newTitle))
+    const onTitleChangeHandler = useCallback((title: string) => {
+        // dispatch(changeTaskTitleAC(task.id, todolistId, newTitle))
+        dispatch(updateTaskTC(todolistId, task.id, {title}))
     }, [dispatch])
 
-    const onChangeTaskStatusHandler = useCallback((taskID: string, checked: boolean) => {
-        dispatch(changeTaskStatusAC(taskID, checked, todolistId))
+    const onChangeTaskStatusHandler = useCallback((checked: boolean) => {
+        // dispatch(changeTaskStatusAC(taskID, checked, todolistId))
+        const status: TaskStatuses = checked ? TaskStatuses.Completed : TaskStatuses.New
+        dispatch(updateTaskTC(todolistId, task.id, {status}))
     }, [dispatch])
 
-    return <li className={task.isDone ? 'is-done' : ''}>
-        <Checkbox onChange={(checked) => onChangeTaskStatusHandler(task.id, checked)}
-                  checked={task.isDone}/>
+    return <li className={task.status ? 'is-done' : ''}>
+        <Checkbox onChange={(checked) => onChangeTaskStatusHandler(checked)}
+                  checked={task.status === TaskStatuses.Completed}/>
         <EditableSpan value={task.title} onChange={onTitleChangeHandler}/>
-        <button onClick={onClickHandler}>x</button>
+        <button onClick={onClickDeleteHandler}>x</button>
     </li>
 })
 

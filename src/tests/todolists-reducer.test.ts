@@ -1,3 +1,6 @@
+export const todolistsReducerTest = 0
+
+/*
 import {
     addTodolistAC,
     changeFilterAC,
@@ -44,11 +47,11 @@ test('correct todolist should change its name', () => {
 
     let newTodolistTitle = 'New Todolist';
 
-    /*const action = {
+    /!*const action = {
         type: 'CHANGE-TODOLIST-TITLE',
         id: todolistId2,
         title: newTodolistTitle
-    };*/
+    };*!/
 
     const endState = todolistsReducer(startState, changeTodolistTitleAC(todolistId2, newTodolistTitle));
 
@@ -60,14 +63,14 @@ test('correct filter of todolist should be changed', () => {
 
     let newFilter: FilterValuesType = 'completed';
 
-    /*const action = {
+    /!*const action = {
         type: 'CHANGE-TODOLIST-FILTER',
         id: todolistId2,
         filter: newFilter
-    };*/
+    };*!/
 
     const endState = todolistsReducer(startState, changeFilterAC(todolistId2, newFilter));
 
     expect(endState[0].filter).toBe('all');
     expect(endState[1].filter).toBe(newFilter);
-});
+});*/
