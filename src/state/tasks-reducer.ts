@@ -2,7 +2,7 @@ import {TasksStateType} from '../App';
 import {AddTodolistACType, RemoveTodolistACType, SetTodolistsACType} from './todolists-reducer';
 import {AppStateType, AppThunk} from './store';
 import {TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
-import {setAppStatusAC} from '../app/app-reducer';
+import {setAppErrorAC, setAppStatusAC} from '../app/app-reducer';
 
 const initialState: TasksStateType = {}
 
@@ -174,7 +174,7 @@ export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (d
     dispatch(setAppStatusAC('loading'))
     todolistsAPI
         .deleteTask(todolistId, taskId)
-        .then(res => {
+        .then(() => {
             dispatch(removeTaskAC(todolistId, taskId))
             dispatch(setAppStatusAC('succeeded'))
         })
@@ -184,9 +184,18 @@ export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispa
     todolistsAPI
         .createTask(todolistId, title)
         .then(res => {
-            // dispatch(removeTaskAC(todolistId, taskId))
-            dispatch(addTaskAC(res.data.data.item))
-            dispatch(setAppStatusAC('succeeded'))
+            if (res.data.resultCode === 0) {
+                const task = res.data.data.item
+                dispatch(addTaskAC(task))
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                if (res.data.messages.length) {
+                    dispatch(setAppErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(setAppErrorAC('Some error occurred'))
+                }
+                dispatch(setAppStatusAC('failed'))
+            }
         })
 }
 export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTaskModelType): AppThunk =>
@@ -206,7 +215,7 @@ export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTa
                     startDate: task.startDate,
                     ...model
                 })
-                .then(res => {
+                .then(() => {
                     dispatch(updateTaskAC(todolistId, taskId, model))
                     dispatch(setAppStatusAC('succeeded'))
                 })
