@@ -1,13 +1,13 @@
 import React from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-// import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
-// import {setAppErrorAC, setAppSuccessAC} from '../../../app/app_reducer';
 import {AlertColor} from '@mui/material/Alert/Alert';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {setAppErrorAC, setAppSuccessAC} from '../../app/app-reducer';
 
 
 export const UniversalSnackbar = () => {
-    /*const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch()
     const error = useAppSelector(state => state.app.error)
     const success = useAppSelector(state => state.app.success)
     const severity: AlertColor = success ? 'success' : 'error'
@@ -22,10 +22,8 @@ export const UniversalSnackbar = () => {
     const isOpen: boolean = !!error || !!success
 
     return (<>
-        {message && <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}>
+        {message && <Snackbar open={isOpen} autoHideDuration={5000} onClose={handleClose}>
             <Alert variant="filled" severity={severity}>{message}</Alert>
         </Snackbar>}
-    </>);*/
-
-    return <></>
+    </>);
 };

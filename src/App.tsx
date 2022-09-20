@@ -14,6 +14,7 @@ import Menu from '@mui/icons-material/Menu';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
 import {useAppSelector} from './app/hooks';
+import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
 
 
 export type TasksStateType = {
@@ -26,7 +27,7 @@ function App() {
 
     return (
         <div>
-            {/*<UniversalSnackbar/>*/}
+            <UniversalSnackbar/>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" aria-label="menu">
