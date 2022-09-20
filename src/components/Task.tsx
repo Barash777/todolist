@@ -5,7 +5,7 @@ import {EditableSpan} from './EditableSpan';
 import {TaskStatuses, TaskType} from '../api/todolists-api';
 import {useAppDispatch} from '../app/hooks';
 import IconButton from '@mui/material/IconButton';
-import {Delete} from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import Checkbox from '@mui/material/Checkbox';
 
 export type TaskPropsType = {

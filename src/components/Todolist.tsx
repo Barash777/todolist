@@ -13,7 +13,7 @@ import Task from './Task';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import {TaskStatuses} from '../api/todolists-api';
 import IconButton from '@mui/material/IconButton';
-import {Delete} from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 
 
@@ -44,26 +44,13 @@ export const Todolist = React.memo((props: PropsType) => {
         dispatch(changeFilterAC(id, value))
     }
 
-    /*const onChangeFilterHandler = useCallback((value: FilterValuesType) => {
-        dispatch(changeFilterAC(id, value))
-    }, [dispatch])*/
-
-    /*const onChangeFilterAllHandler = useCallback(() => {
-        dispatch(changeFilterAC(id, 'all'))
-    }, [dispatch])
-    const onChangeFilterActiveHandler = useCallback(() => {
-        dispatch(changeFilterAC(id, 'active'))
-    }, [dispatch])
-    const onChangeFilterCompletedHandler = useCallback(() => {
-        dispatch(changeFilterAC(id, 'completed'))
-    }, [dispatch])*/
 
     useEffect(() => {
         dispatch(getTasksTC(id))
     }, [])
 
     const tasksJSX = useMemo(() => {
-        console.log('TASKS MEMO')
+        // console.log('TASKS MEMO')
         if (filter === 'active') {
             tasks = tasks.filter(t => t.status !== TaskStatuses.Completed);
         }

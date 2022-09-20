@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import {Menu} from '@mui/icons-material';
+import Menu from '@mui/icons-material/Menu';
 // import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
