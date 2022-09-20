@@ -1,12 +1,13 @@
 import {todolistsAPI, TodolistType} from '../api/todolists-api';
 import {AppThunk} from './store';
-import {setAppErrorAC, setAppStatusAC} from '../app/app-reducer';
+import {RequestStatusType, setAppErrorAC, setAppStatusAC} from '../app/app-reducer';
 
 const initialState: Array<TodolistDomainType> = []
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistDomainType = TodolistType & {
     filter: FilterValuesType
+    entityStatus: RequestStatusType
 }
 
 export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: UnionTodolistsActionType): Array<TodolistDomainType> => {
@@ -16,7 +17,8 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
         case 'ADD-TODOLIST':
             return [{
                 ...action.payload.todolist,
-                filter: 'all'
+                filter: 'all',
+                entityStatus: 'idle'
             }, ...state]
         case 'CHANGE-TODOLIST-FILTER':
             return state.map(e => e.id === action.payload.id ? {...e, filter: action.payload.filter} : e)
@@ -24,7 +26,7 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return state.map(e => e.id === action.payload.id ? {...e, title: action.payload.title} : e)
         case 'SET-TODOLISTS':
             return action.payload.todolists.map(t => {
-                return {...t, filter: 'all'}
+                return {...t, filter: 'all', entityStatus: 'idle'}
             })
         default:
             return state
