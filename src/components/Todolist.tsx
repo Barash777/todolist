@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import {addTaskAC, addTaskTC, getTasksTC} from '../state/tasks-reducer';
+import {addTaskTC, getTasksTC} from '../state/tasks-reducer';
 import {
     changeFilterAC,
     FilterValuesType,
@@ -12,6 +12,9 @@ import {
 import Task from './Task';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import {TaskStatuses} from '../api/todolists-api';
+import IconButton from '@mui/material/IconButton';
+import {Delete} from '@mui/icons-material';
+import Button from '@mui/material/Button';
 
 
 type PropsType = {
@@ -19,7 +22,7 @@ type PropsType = {
 }
 
 export const Todolist = React.memo((props: PropsType) => {
-    console.log('Todolist')
+    // console.log('Todolist')
     const {id, title, filter} = props.todolist
 
     // let tasks = useSelector<AppStateType, Array<TaskType>>(state => state.tasks[id])
@@ -76,35 +79,36 @@ export const Todolist = React.memo((props: PropsType) => {
     }, [tasks, filter])
 
 
-    return <div>
-        <h3>
-            <EditableSpan value={title} onChange={changeTodolistTitle}/>
-            <button onClick={removeTodolist}>x</button>
-        </h3>
-        <AddItemForm addItem={addTask}/>
-        {tasksJSX}
-        <div>
-            <button className={filter === 'all' ? 'active-filter' : ''}
-                    onClick={() => onChangeFilterHandler('all')}>All
-            </button>
-            <button className={filter === 'active' ? 'active-filter' : ''}
-                    onClick={() => onChangeFilterHandler('active')}>Active
-            </button>
-            <button className={filter === 'completed' ? 'active-filter' : ''}
-                    onClick={() => onChangeFilterHandler('completed')}>Completed
-            </button>
+    return (
 
-            {/*<button className={filter === 'all' ? 'active-filter' : ''}
-                    onClick={onChangeFilterAllHandler}>All
-            </button>
-            <button className={filter === 'active' ? 'active-filter' : ''}
-                    onClick={onChangeFilterActiveHandler}>Active
-            </button>
-            <button className={filter === 'completed' ? 'active-filter' : ''}
-                    onClick={onChangeFilterCompletedHandler}>Completed
-            </button>*/}
+        <div>
+            <h3><EditableSpan value={title} onChange={changeTodolistTitle}/>
+                {/*<IconButton onClick={removeTodolist} disabled={props.todolist.entityStatus === 'loading'}>*/}
+                <IconButton onClick={removeTodolist}>
+                    <Delete/>
+                </IconButton>
+            </h3>
+            {/*<AddItemForm addItem={addTask} disabled={props.todolist.entityStatus === 'loading'}/>*/}
+            <AddItemForm addItem={addTask}/>
+            {tasksJSX}
+            <div style={{paddingTop: '10px'}}>
+                <Button variant={filter === 'all' ? 'outlined' : 'text'}
+                        onClick={() => onChangeFilterHandler('all')}
+                        color={filter === 'all' ? 'primary' : 'secondary'}
+                >All
+                </Button>
+                <Button variant={filter === 'active' ? 'outlined' : 'text'}
+                        onClick={() => onChangeFilterHandler('active')}
+                        color={filter === 'active' ? 'primary' : 'secondary'}>Active
+                </Button>
+                <Button variant={filter === 'completed' ? 'outlined' : 'text'}
+                        onClick={() => onChangeFilterHandler('completed')}
+                        color={filter === 'completed' ? 'primary' : 'secondary'}>Completed
+                </Button>
+            </div>
         </div>
-    </div>
+
+    )
 })
 
 

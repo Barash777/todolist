@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import {Menu} from '@mui/icons-material';
 // import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
 import {Login} from './components/Login/Login';
+import Todolists from './components/Todolists/Todolists';
 
 
 export type TasksStateType = {
@@ -36,8 +37,7 @@ function App() {
             </AppBar>
             <Container fixed>
                 <Routes>
-                    {/*<Route path="/" element={<Todolists/>}/>*/}
-                    <Route path="/" element={<div>TEST</div>}/>
+                    <Route path="/" element={<Todolists/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="*" element={<h3>404: PAGE NOT FOUND</h3>}/>
                     {/*<Route path="/404" element={<h3>404: PAGE NOT FOUND</h3>}/>*/}
