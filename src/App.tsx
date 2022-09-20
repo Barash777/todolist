@@ -8,10 +8,12 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
 import Menu from '@mui/icons-material/Menu';
 // import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
+import {useAppSelector} from './app/hooks';
 
 
 export type TasksStateType = {
@@ -20,6 +22,8 @@ export type TasksStateType = {
 
 
 function App() {
+    let status = useAppSelector(state => state.app.status)
+
     return (
         <div>
             {/*<UniversalSnackbar/>*/}
@@ -33,29 +37,15 @@ function App() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
-                {/*{status === 'loading' && <LinearProgress/>}*/}
+                {status === 'loading' && <LinearProgress/>}
             </AppBar>
             <Container fixed>
                 <Routes>
                     <Route path="/" element={<Todolists/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="*" element={<h3>404: PAGE NOT FOUND</h3>}/>
-                    {/*<Route path="/404" element={<h3>404: PAGE NOT FOUND</h3>}/>*/}
-                    {/*<Route path="*" element={<Navigate to={'/404'}/>}/>*/}
                 </Routes>
             </Container>
-
-
-            {/*<AddItemForm addItem={addTodolist}/>
-            {
-                todoLists.map(tl => {
-
-                    return <Todolist
-                        key={tl.id}
-                        todolist={tl}
-                    />
-                })
-            }*/}
 
         </div>
     );
