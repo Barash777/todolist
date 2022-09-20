@@ -1,5 +1,5 @@
 import {TasksStateType} from '../App';
-import {AddTodolistACType, RemoveTodolistACType, SetTodolistsACType} from './todolists-reducer';
+import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer';
 import {AppStateType, AppThunk} from './store';
 import {TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
 import {setAppErrorAC, setAppStatusAC} from '../app/app-reducer';
@@ -87,9 +87,9 @@ export type UnionTasksActionType =
     AddTaskACType |
     ChangeTaskStatusACType |
     ChangeTaskTitleACType |
-    AddTodolistACType |
-    RemoveTodolistACType |
-    SetTodolistsACType |
+    AddTodolistActionType |
+    RemoveTodolistActionType |
+    SetTodolistsActionType |
     SetTasksACType |
     UpdateTaskACType
 
