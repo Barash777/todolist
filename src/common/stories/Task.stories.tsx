@@ -2,11 +2,11 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 // import {action} from '@storybook/addon-actions';
-import Task from '../components/Task';
+import Task from '../../components/Todolists/Task/Task';
 import {DecoratorProvider} from './DecoratorProvider';
 import {useSelector} from 'react-redux';
-import {AppStateType} from '../state/store';
-import {DomainTaskType} from '../state/tasks-reducer';
+import {AppStateType} from '../../state/store';
+import {DomainTaskType} from '../../components/Todolists/Task/tasks-reducer';
 
 // const cb = action('button clicked')
 

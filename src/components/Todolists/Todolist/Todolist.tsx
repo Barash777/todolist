@@ -1,17 +1,17 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
-import {AddItemForm} from './AddItemForm';
-import {EditableSpan} from './EditableSpan';
-import {addTaskTC, getTasksTC} from '../state/tasks-reducer';
+import {AddItemForm} from '../../AddItemForm/AddItemForm';
+import {EditableSpan} from '../../EditableSpan/EditableSpan';
+import {addTaskTC, getTasksTC} from '../Task/tasks-reducer';
 import {
     changeFilterAC,
     FilterValuesType,
     removeTodolistTC,
     TodolistDomainType,
     updateTodolistTC
-} from '../state/todolists-reducer';
-import Task from './Task';
-import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {TaskStatuses} from '../api/api';
+} from './todolists-reducer';
+import Task from '../Task/Task';
+import {useAppDispatch, useAppSelector} from '../../../common/hooks/hooks';
+import {TaskStatuses} from '../../../api/api';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';

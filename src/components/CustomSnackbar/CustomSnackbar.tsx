@@ -2,7 +2,7 @@ import React from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import {AlertColor} from '@mui/material/Alert/Alert';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../common/hooks/hooks';
 import {setAppErrorAC, setAppSuccessAC} from '../../app/app-reducer';
 
 

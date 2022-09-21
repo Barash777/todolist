@@ -1,6 +1,6 @@
 import {authApi} from '../api/api';
 import {AppThunk} from '../state/store';
-import {checkWithResultCode, errorUtils} from '../utils/error-utils';
+import {checkWithResultCode, errorUtils} from '../common/utils/error-utils';
 import {setIsLoggedInAC} from '../components/Login/auth-reducer';
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'

@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import AppBar from '@mui/material/AppBar';
@@ -7,12 +6,12 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
-import {Login} from './components/Login/Login';
-import Todolists from './components/Todolists/Todolists';
-import {useAppDispatch, useAppSelector} from './app/hooks';
-import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
-import {initializeAppTC} from './app/app-reducer';
-import {logoutTC} from './components/Login/auth-reducer';
+import {Login} from '../components/Login/Login';
+import Todolists from '../components/Todolists/Todolists';
+import {useAppDispatch, useAppSelector} from '../common/hooks/hooks';
+import {UniversalSnackbar} from '../components/CustomSnackbar/CustomSnackbar';
+import {initializeAppTC} from './app-reducer';
+import {logoutTC} from '../components/Login/auth-reducer';
 
 
 function App() {

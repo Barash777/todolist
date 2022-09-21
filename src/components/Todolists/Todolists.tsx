@@ -1,11 +1,11 @@
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import React, {useCallback, useEffect} from 'react';
-import {AddItemForm} from '../AddItemForm';
-import {Todolist} from '../Todolist';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {AddItemForm} from '../AddItemForm/AddItemForm';
+import {Todolist} from './Todolist/Todolist';
+import {useAppDispatch, useAppSelector} from '../../common/hooks/hooks';
 import {AppStateType} from '../../state/store';
-import {addTodolistTC, getTodolistsTC} from '../../state/todolists-reducer';
+import {addTodolistTC, getTodolistsTC} from './Todolist/todolists-reducer';
 import {Navigate} from 'react-router-dom';
 
 const Todolists = () => {

@@ -1,7 +1,7 @@
 import {applyMiddleware, combineReducers, compose} from 'redux';
 import {legacy_createStore as createStore} from 'redux'
-import {todolistsReducer, UnionTodolistsActionType} from './todolists-reducer';
-import {tasksReducer, UnionTasksActionType} from './tasks-reducer';
+import {todolistsReducer, UnionTodolistsActionType} from '../components/Todolists/Todolist/todolists-reducer';
+import {tasksReducer, UnionTasksActionType} from '../components/Todolists/Task/tasks-reducer';
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {appReducer, UnionAppActionsType} from '../app/app-reducer';
 import {authReducer, UnionAuthActionsType} from '../components/Login/auth-reducer';

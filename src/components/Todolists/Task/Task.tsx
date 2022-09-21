@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import {DomainTaskType, removeTaskTC, updateTaskTC} from '../state/tasks-reducer';
+import {DomainTaskType, removeTaskTC, updateTaskTC} from './tasks-reducer';
 // import Checkbox from './Checkbox';
-import {EditableSpan} from './EditableSpan';
-import {TaskStatuses} from '../api/api';
-import {useAppDispatch} from '../app/hooks';
+import {EditableSpan} from '../../EditableSpan/EditableSpan';
+import {TaskStatuses} from '../../../api/api';
+import {useAppDispatch} from '../../../common/hooks/hooks';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import Checkbox from '@mui/material/Checkbox';

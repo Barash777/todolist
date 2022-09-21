@@ -1,6 +1,6 @@
 import {setAppStatusAC} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
-import {checkWithResultCode, errorUtils} from '../../utils/error-utils';
+import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {AppThunk} from '../../state/store';
 
 const initialState = {

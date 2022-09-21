@@ -3,7 +3,7 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import {action} from '@storybook/addon-actions';
 import {DecoratorProvider} from './DecoratorProvider';
-import App from '../App';
+import App from '../../app/App';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

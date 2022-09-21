@@ -1,10 +1,10 @@
 import {Provider} from 'react-redux';
 import React from 'react';
 import {combineReducers, legacy_createStore as createStore} from 'redux';
-import {todolistsReducer} from '../state/todolists-reducer';
-import {tasksReducer,} from '../state/tasks-reducer';
+import {todolistsReducer} from '../../components/Todolists/Todolist/todolists-reducer';
+import {tasksReducer,} from '../../components/Todolists/Task/tasks-reducer';
 import {v1} from 'uuid';
-import {AppStateType} from '../state/store';
+import {AppStateType} from '../../state/store';
 
 /*export const testTodolist = {
     id: '1',
