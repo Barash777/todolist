@@ -4,6 +4,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 type EditableSpanPropsType = {
     value: string
     onChange: (newValue: string) => void
+    disabled?: boolean
 }
 
 export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
@@ -13,6 +14,9 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
     let [title, setTitle] = useState(props.value);
 
     const activateEditMode = () => {
+        if (props.disabled)
+            return;
+        
         setEditMode(true);
         setTitle(props.value);
     }
