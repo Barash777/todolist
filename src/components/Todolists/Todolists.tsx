@@ -4,8 +4,8 @@ import React, {useCallback, useEffect} from 'react';
 import {AddItemForm} from '../AddItemForm/AddItemForm';
 import {Todolist} from './Todolist/Todolist';
 import {useAppDispatch, useAppSelector} from '../../common/hooks/hooks';
-import {AppStateType} from '../../state/store';
-import {addTodolistTC, getTodolistsTC} from './Todolist/todolists-reducer';
+import {AppStateType} from '../../app/store';
+import {addTodolistTC, getTodolistsTC} from './todolists-reducer';
 import {Navigate} from 'react-router-dom';
 
 const Todolists = () => {

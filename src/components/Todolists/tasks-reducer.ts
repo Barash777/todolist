@@ -2,11 +2,11 @@ import {
     AddTodolistActionType,
     RemoveTodolistActionType,
     SetTodolistsActionType
-} from '../Todolist/todolists-reducer';
-import {AppStateType, AppThunk} from '../../../state/store';
-import {TaskType, todolistApi, UpdateTaskModelType} from '../../../api/api';
-import {RequestStatusType, setAppStatusAC} from '../../../app/app-reducer';
-import {checkWithResultCode, errorUtils} from '../../../common/utils/error-utils';
+} from './todolists-reducer';
+import {AppStateType, AppThunk} from '../../app/store';
+import {TaskType, todolistApi, UpdateTaskModelType} from '../../api/api';
+import {RequestStatusType, setAppStatusAC} from '../../app/app-reducer';
+import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 
 const initialState = {} as TasksStateType
 

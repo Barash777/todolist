@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import {DomainTaskType, removeTaskTC, updateTaskTC} from './tasks-reducer';
+import {DomainTaskType, removeTaskTC, updateTaskTC} from '../tasks-reducer';
 // import Checkbox from './Checkbox';
 import {EditableSpan} from '../../EditableSpan/EditableSpan';
 import {TaskStatuses} from '../../../api/api';

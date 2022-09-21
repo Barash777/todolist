@@ -5,8 +5,8 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 import Task from '../../components/Todolists/Task/Task';
 import {DecoratorProvider} from './DecoratorProvider';
 import {useSelector} from 'react-redux';
-import {AppStateType} from '../../state/store';
-import {DomainTaskType} from '../../components/Todolists/Task/tasks-reducer';
+import {AppStateType} from '../../app/store';
+import {DomainTaskType} from '../../components/Todolists/tasks-reducer';
 
 // const cb = action('button clicked')
 

@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {EditableSpan} from '../../EditableSpan/EditableSpan';
-import {addTaskTC, getTasksTC} from '../Task/tasks-reducer';
+import {addTaskTC, getTasksTC} from '../tasks-reducer';
 import {
     changeFilterAC,
     FilterValuesType,
     removeTodolistTC,
     TodolistDomainType,
     updateTodolistTC
-} from './todolists-reducer';
+} from '../todolists-reducer';
 import Task from '../Task/Task';
 import {useAppDispatch, useAppSelector} from '../../../common/hooks/hooks';
 import {TaskStatuses} from '../../../api/api';
