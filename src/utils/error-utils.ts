@@ -1,6 +1,6 @@
 import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../app/app-reducer'
 import {Dispatch} from 'redux'
-import {ResponseType} from '../api/todolists-api'
+import {ResponseType} from '../api/api'
 import axios, {AxiosError, AxiosResponse} from 'axios';
 
 // generic function

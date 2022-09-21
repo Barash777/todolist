@@ -4,7 +4,7 @@ import {
     SetTodolistsActionType
 } from './todolists-reducer';
 import {AppStateType, AppThunk} from './store';
-import {TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
+import {TaskType, todolistApi, UpdateTaskModelType} from '../api/api';
 import {RequestStatusType, setAppStatusAC} from '../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../utils/error-utils';
 
@@ -200,7 +200,7 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateTa
 // THUNKS
 export const getTasksTC = (todolistId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistsAPI
+    todolistApi
         .getTasks(todolistId)
         .then(res => {
             dispatch(setTasksAC(todolistId, res.data.items))
@@ -213,7 +213,7 @@ export const getTasksTC = (todolistId: string): AppThunk => (dispatch) => {
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'loading'))
-    todolistsAPI
+    todolistApi
         .deleteTask(todolistId, taskId)
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
@@ -227,7 +227,7 @@ export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (d
 }
 export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistsAPI
+    todolistApi
         .createTask(todolistId, title)
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
@@ -247,7 +247,7 @@ export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTa
         if (task) {
             dispatch(setAppStatusAC('loading'))
             dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'loading'))
-            todolistsAPI
+            todolistApi
                 .updateTask(todolistId, taskId, {
                     title: task.title,
                     deadline: task.deadline,

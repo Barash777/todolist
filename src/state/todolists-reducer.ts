@@ -1,4 +1,4 @@
-import {todolistsAPI, TodolistType} from '../api/todolists-api';
+import {todolistApi, TodolistType} from '../api/api';
 import {AppThunk} from './store';
 import {RequestStatusType, setAppStatusAC} from '../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../utils/error-utils';
@@ -108,7 +108,7 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) => {
 // THUNKS
 export const getTodolistsTC = (): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistsAPI
+    todolistApi
         .getTodolists()
         .then(res => {
             dispatch(setTodolistsAC(res.data))
@@ -120,7 +120,7 @@ export const getTodolistsTC = (): AppThunk => (dispatch) => {
 }
 export const addTodolistTC = (title: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistsAPI
+    todolistApi
         .createTodolist(title)
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
@@ -134,7 +134,7 @@ export const addTodolistTC = (title: string): AppThunk => (dispatch) => {
 export const removeTodolistTC = (id: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     dispatch(changeTodolistEntityStatusAC(id, 'loading'))
-    todolistsAPI
+    todolistApi
         .deleteTodolist(id)
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
@@ -149,7 +149,7 @@ export const removeTodolistTC = (id: string): AppThunk => (dispatch) => {
 export const updateTodolistTC = (id: string, title: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     dispatch(changeTodolistEntityStatusAC(id, 'loading'))
-    todolistsAPI
+    todolistApi
         .updateTodolist(id, title)
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {

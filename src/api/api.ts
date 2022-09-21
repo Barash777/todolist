@@ -9,7 +9,7 @@ const instance = axios.create({
 })
 
 // api
-export const todolistsAPI = {
+export const todolistApi = {
     getTodolists() {
         return instance.get<TodolistType[]>('todo-lists');
     },
@@ -36,7 +36,23 @@ export const todolistsAPI = {
     }
 }
 
+export const authApi = {
+    login(data: LoginParamsType) {
+        return instance.post<ResponseType<{ userId?: number }>>('auth/login', data);
+    },
+
+
+}
+
+
 // types
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
 export type TodolistType = {
     id: string
     title: string
@@ -46,7 +62,7 @@ export type TodolistType = {
 export type ResponseType<D = {}> = {
     resultCode: number
     messages: Array<string>
-    fieldsErrors: Array<string>
+    // fieldsErrors: Array<string>
     data: D
 }
 

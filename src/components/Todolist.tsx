@@ -11,7 +11,7 @@ import {
 } from '../state/todolists-reducer';
 import Task from './Task';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {TaskStatuses} from '../api/todolists-api';
+import {TaskStatuses} from '../api/api';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
