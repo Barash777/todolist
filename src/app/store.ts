@@ -5,7 +5,7 @@ import {tasksReducer, UnionTasksActionType} from '../components/Todolists/tasks-
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {appReducer, UnionAppActionsType} from './app-reducer';
 import {authReducer, UnionAuthActionsType} from '../components/Login/auth-reducer';
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, MiddlewareArray} from '@reduxjs/toolkit';
 
 /*declare global {
     interface Window {
@@ -25,7 +25,8 @@ export const rootReducer = combineReducers({
 // export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware)))
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
+    // middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
+    middleware: new MiddlewareArray().concat(thunkMiddleware),
 })
 
 export type AppStateType = ReturnType<typeof rootReducer>

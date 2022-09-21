@@ -2,29 +2,47 @@ import {setAppStatusAC} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {AppThunk} from '../../app/store';
+import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     isLoggedIn: false
 }
-type AuthInitialStateType = typeof initialState
+// type AuthInitialStateType = typeof initialState
 
-export const authReducer = (state: AuthInitialStateType = initialState, action: UnionAuthActionsType): AuthInitialStateType => {
+
+const slice = createSlice({
+    name: 'auth',
+    initialState: initialState,
+    reducers: {
+        setIsLoggedInAC(state, action) {
+            // return {...state, ...action.payload}
+            state.isLoggedIn = action.payload
+        }
+    }
+})
+
+// get reducer
+export const authReducer = slice.reducer;
+// get AC
+export const {setIsLoggedInAC} = slice.actions
+
+/*export const authReducer = (state: AuthInitialStateType = initialState, action: UnionAuthActionsType): AuthInitialStateType => {
     switch (action.type) {
         case 'AUTH/SET-IS-LOGGED-IN':
             return {...state, ...action.payload}
         default:
             return state
     }
-}
+}*/
 // actions
-export const setIsLoggedInAC = (isLoggedIn: boolean) => {
+/*export const setIsLoggedInAC = (isLoggedIn: boolean) => {
     return {
         type: 'AUTH/SET-IS-LOGGED-IN',
         payload: {
             isLoggedIn
         }
     } as const
-}
+}*/
 
 // thunks
 export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
