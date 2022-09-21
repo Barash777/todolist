@@ -4,6 +4,7 @@ import {todolistsReducer, UnionTodolistsActionType} from './todolists-reducer';
 import {tasksReducer, UnionTasksActionType} from './tasks-reducer';
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {appReducer, UnionAppActionsType} from '../app/app-reducer';
+import {authReducer, UnionAuthActionsType} from '../components/Login/auth-reducer';
 
 declare global {
     interface Window {
@@ -14,7 +15,8 @@ declare global {
 export const rootReducer = combineReducers({
         todolists: todolistsReducer,
         tasks: tasksReducer,
-        app: appReducer
+        app: appReducer,
+        auth: authReducer
     }
 )
 
@@ -25,7 +27,10 @@ export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(t
 // export const store = createStore(rootReducer)
 export type AppStateType = ReturnType<typeof rootReducer>
 
-export type AppActionsType = UnionTodolistsActionType | UnionTasksActionType | UnionAppActionsType
+export type AppActionsType = UnionTodolistsActionType
+    | UnionTasksActionType
+    | UnionAppActionsType
+    | UnionAuthActionsType
 // export type AppDispatch = typeof store.dispatch
 export type AppDispatch = ThunkDispatch<AppStateType, unknown, AppActionsType>
 

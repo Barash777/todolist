@@ -1,4 +1,4 @@
-import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../../app/app-reducer'
+import {setAppStatusAC} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../utils/error-utils';
 import {AppThunk} from '../../state/store';
@@ -8,9 +8,9 @@ const initialState = {
 }
 type AuthInitialStateType = typeof initialState
 
-export const authReducer = (state: AuthInitialStateType = initialState, action: AuthActionsType): AuthInitialStateType => {
+export const authReducer = (state: AuthInitialStateType = initialState, action: UnionAuthActionsType): AuthInitialStateType => {
     switch (action.type) {
-        case 'LOGIN/SET-IS-LOGGED-IN':
+        case 'AUTH/SET-IS-LOGGED-IN':
             return {...state, ...action.payload}
         default:
             return state
@@ -19,7 +19,7 @@ export const authReducer = (state: AuthInitialStateType = initialState, action: 
 // actions
 export const setIsLoggedInAC = (isLoggedIn: boolean) => {
     return {
-        type: 'LOGIN/SET-IS-LOGGED-IN',
+        type: 'AUTH/SET-IS-LOGGED-IN',
         payload: {
             isLoggedIn
         }
@@ -32,7 +32,7 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
     authApi.login(data)
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
-                alert('YO')
+                dispatch(setIsLoggedInAC(true))
             })
         })
         .catch(e => {
@@ -41,8 +41,5 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
 }
 
 // types
-type AuthActionsType =
-    SetIsLoggedInActionType
-    | SetAppStatusActionType
-    | SetAppErrorActionType
+export type UnionAuthActionsType = SetIsLoggedInActionType
 type SetIsLoggedInActionType = ReturnType<typeof setIsLoggedInAC>

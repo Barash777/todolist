@@ -6,10 +6,12 @@ import {Todolist} from '../Todolist';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {AppStateType} from '../../state/store';
 import {addTodolistTC, getTodolistsTC} from '../../state/todolists-reducer';
+import {Navigate} from 'react-router-dom';
 
 const Todolists = () => {
 
     const todolists = useAppSelector((state: AppStateType) => state.todolists)
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
     const addTodolist = useCallback((title: string) => {
@@ -18,8 +20,13 @@ const Todolists = () => {
 
 
     useEffect(() => {
-        dispatch(getTodolistsTC())
+        isLoggedIn && dispatch(getTodolistsTC())
     }, [])
+
+
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
 
     return (
         <>
