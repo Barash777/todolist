@@ -3,23 +3,22 @@ import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
-import Menu from '@mui/icons-material/Menu';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
 import {useAppDispatch, useAppSelector} from './app/hooks';
 import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
 import {initializeAppTC} from './app/app-reducer';
+import {logoutTC} from './components/Login/auth-reducer';
 
 
 function App() {
     const status = useAppSelector(state => state.app.status)
     const isInitialized = useAppSelector(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -33,18 +32,21 @@ function App() {
         </div>
     }
 
+    // const loginHandler = (event: MouseEvent<HTMLButtonElement>) => {
+    //     return <Navigate to={'/login'}/>
+    // }
+
+    function logoutHandler() {
+        dispatch(logoutTC())
+    }
+
     return (
         <div>
             <UniversalSnackbar/>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <Menu/>
-                    </IconButton>
-                    <Typography variant="h6">
-                        News
-                    </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
+                    {/*: <Button color="inherit" onClick={loginHandler}>Login</Button>}*/}
                 </Toolbar>
                 {status === 'loading' && <LinearProgress/>}
             </AppBar>

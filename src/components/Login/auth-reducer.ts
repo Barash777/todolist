@@ -39,6 +39,19 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
             errorUtils(e, dispatch)
         })
 }
+export const logoutTC = (): AppThunk => (dispatch) => {
+    dispatch(setAppStatusAC('loading'))
+    authApi.logout()
+        .then(res => {
+            checkWithResultCode(res, dispatch, () => {
+                dispatch(setIsLoggedInAC(false))
+            })
+        })
+        .catch((e) => {
+            errorUtils(e, dispatch)
+        })
+}
+
 
 // types
 export type UnionAuthActionsType = SetIsLoggedInActionType
