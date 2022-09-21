@@ -23,7 +23,7 @@ export type TasksStateType = {
 
 
 function App() {
-    let status = useAppSelector(state => state.app.status)
+    const status = useAppSelector(state => state.app.status)
 
     return (
         <div>
