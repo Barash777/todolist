@@ -8,7 +8,8 @@ export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 const initialState = {
     status: 'idle' as RequestStatusType,
     error: null as null | string,
-    success: null as null | string
+    success: null as null | string,
+    isInitialized: false
 }
 
 type AppInitialStateType = typeof initialState
@@ -18,6 +19,7 @@ export const appReducer = (state: AppInitialStateType = initialState, action: Un
         case 'APP/SET-STATUS':
         case 'APP/SET-ERROR':
         case 'APP/SET-SUCCESS':
+        case 'APP/SET-IS-INITIALIZED':
             return {...state, ...action.payload}
         default:
             return state
@@ -28,9 +30,11 @@ export const appReducer = (state: AppInitialStateType = initialState, action: Un
 export type UnionAppActionsType = SetAppStatusActionType
     | SetAppErrorActionType
     | SetAppSuccessActionType
+    | SetAppIsInitializedActionType
 export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
 export type SetAppSuccessActionType = ReturnType<typeof setAppSuccessAC>
+export type SetAppIsInitializedActionType = ReturnType<typeof setAppIsInitializedAC>
 
 // ACs
 export const setAppStatusAC = (status: RequestStatusType) => {
@@ -39,7 +43,7 @@ export const setAppStatusAC = (status: RequestStatusType) => {
         payload: {
             status
         }
-    }
+    } as const
 }
 export const setAppErrorAC = (error: string | null) => {
     return {
@@ -47,7 +51,7 @@ export const setAppErrorAC = (error: string | null) => {
         payload: {
             error
         }
-    }
+    } as const
 }
 export const setAppSuccessAC = (success: string | null) => {
     return {
@@ -55,7 +59,15 @@ export const setAppSuccessAC = (success: string | null) => {
         payload: {
             success
         }
-    }
+    } as const
+}
+export const setAppIsInitializedAC = (isInitialized: boolean) => {
+    return {
+        type: 'APP/SET-IS-INITIALIZED',
+        payload: {
+            isInitialized
+        }
+    } as const
 }
 
 // thunk
@@ -69,5 +81,8 @@ export const initializeAppTC = (): AppThunk => (dispatch) => {
         })
         .catch(e => {
             errorUtils(e, dispatch)
+        })
+        .finally(() => {
+            dispatch(setAppIsInitializedAC(true))
         })
 }

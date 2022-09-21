@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Menu from '@mui/icons-material/Menu';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
@@ -18,11 +19,19 @@ import {initializeAppTC} from './app/app-reducer';
 
 function App() {
     const status = useAppSelector(state => state.app.status)
+    const isInitialized = useAppSelector(state => state.app.isInitialized)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(initializeAppTC())
     }, []);
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '40%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
 
     return (
         <div>
