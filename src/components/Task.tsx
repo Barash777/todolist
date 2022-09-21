@@ -17,9 +17,9 @@ const Task = React.memo(({task, todolistId}: TaskPropsType) => {
     // console.log('Task')
     const dispatch = useAppDispatch()
 
-    const onClickDeleteHandler = () => {
+    const onClickDeleteHandler = useCallback(() => {
         dispatch(removeTaskTC(todolistId, task.id))
-    }
+    }, [dispatch])
 
     const onTitleChangeHandler = (title: string) => {
         if (title === task.title) {
