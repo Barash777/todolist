@@ -5,7 +5,7 @@ import {
 } from './todolists-reducer';
 import {AppStateType, AppThunk} from '../../app/store';
 import {TaskType, todolistApi, UpdateTaskModelType} from '../../api/api';
-import {RequestStatusType, setAppStatus} from '../../app/app-reducer';
+import {RequestStatusType, setAppStatus, setAppSuccess} from '../../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 
 const initialState = {} as TasksStateType
@@ -218,6 +218,7 @@ export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (d
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
                 dispatch(removeTaskAC(todolistId, taskId))
+                dispatch(setAppSuccess('You deleted task'))
             })
         })
         .catch(e => {
@@ -233,6 +234,7 @@ export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispa
             checkWithResultCode(res, dispatch, () => {
                 const task = res.data.data.item
                 dispatch(addTaskAC(task))
+                dispatch(setAppSuccess('You added new task'))
             })
         })
         .catch(e => {

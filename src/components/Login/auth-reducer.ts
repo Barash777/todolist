@@ -1,4 +1,4 @@
-import {setAppStatus} from '../../app/app-reducer'
+import {setAppStatus, setAppSuccess} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {AppThunk} from '../../app/store';
@@ -51,6 +51,7 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
                 dispatch(setIsLoggedIn(true))
+                dispatch(setAppSuccess('You are successfully login'))
             })
         })
         .catch(e => {
@@ -63,6 +64,7 @@ export const logoutTC = (): AppThunk => (dispatch) => {
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
                 dispatch(setIsLoggedIn(false))
+                dispatch(setAppSuccess('You are successfully logout'))
             })
         })
         .catch((e) => {

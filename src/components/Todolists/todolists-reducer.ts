@@ -1,6 +1,6 @@
 import {todolistApi, TodolistType} from '../../api/api';
 import {AppThunk} from '../../app/store';
-import {RequestStatusType, setAppStatus} from '../../app/app-reducer';
+import {RequestStatusType, setAppStatus, setAppSuccess} from '../../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 
 const initialState: Array<TodolistDomainType> = []
@@ -125,6 +125,7 @@ export const addTodolistTC = (title: string): AppThunk => (dispatch) => {
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
                 dispatch(addTodolistAC(res.data.data.item))
+                dispatch(setAppSuccess('You added new todolist'))
             })
         })
         .catch(e => {
@@ -139,6 +140,7 @@ export const removeTodolistTC = (id: string): AppThunk => (dispatch) => {
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
                 dispatch(removeTodolistAC(id))
+                dispatch(setAppSuccess('You deleted todolist'))
             })
         })
         .catch(e => {
