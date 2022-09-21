@@ -1,16 +1,18 @@
-import {applyMiddleware, combineReducers, compose} from 'redux';
-import {legacy_createStore as createStore} from 'redux'
+import {/*applyMiddleware, compose,*/ combineReducers} from 'redux';
+// import {legacy_createStore as createStore} from 'redux'
 import {todolistsReducer, UnionTodolistsActionType} from '../components/Todolists/todolists-reducer';
 import {tasksReducer, UnionTasksActionType} from '../components/Todolists/tasks-reducer';
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {appReducer, UnionAppActionsType} from './app-reducer';
 import {authReducer, UnionAuthActionsType} from '../components/Login/auth-reducer';
+import {configureStore} from '@reduxjs/toolkit';
 
-declare global {
+/*declare global {
     interface Window {
         __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
     }
 }
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;*/
 
 export const rootReducer = combineReducers({
         todolists: todolistsReducer,
@@ -20,11 +22,12 @@ export const rootReducer = combineReducers({
     }
 )
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-// export const store: Store<AppStateType> = createStore(rootReducer, composeEnhancers());
-export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware)))
-// export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
-// export const store = createStore(rootReducer)
+// export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware)))
+export const store = configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
+})
+
 export type AppStateType = ReturnType<typeof rootReducer>
 
 export type AppActionsType = UnionTodolistsActionType
