@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -11,12 +11,18 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Menu from '@mui/icons-material/Menu';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
-import {useAppSelector} from './app/hooks';
+import {useAppDispatch, useAppSelector} from './app/hooks';
 import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
+import {initializeAppTC} from './app/app-reducer';
 
 
 function App() {
     const status = useAppSelector(state => state.app.status)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(initializeAppTC())
+    }, []);
 
     return (
         <div>
