@@ -1,9 +1,13 @@
 import {TasksStateType} from '../App';
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer';
+import {
+    AddTodolistActionType,
+    RemoveTodolistActionType,
+    SetTodolistsActionType
+} from './todolists-reducer';
 import {AppStateType, AppThunk} from './store';
 import {TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
-import {setAppErrorAC, setAppStatusAC} from '../app/app-reducer';
-import {errorUtils} from '../utils/error-utils';
+import {setAppStatusAC} from '../app/app-reducer';
+import {checkWithResultCode, errorUtils} from '../utils/error-utils';
 
 const initialState: TasksStateType = {}
 
@@ -172,20 +176,19 @@ export const getTasksTC = (todolistId: string): AppThunk => (dispatch) => {
         })
         .catch(e => {
             errorUtils(e, dispatch)
-            dispatch(setAppStatusAC('failed'))
         })
 }
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     todolistsAPI
         .deleteTask(todolistId, taskId)
-        .then(() => {
-            dispatch(removeTaskAC(todolistId, taskId))
-            dispatch(setAppStatusAC('succeeded'))
+        .then((res) => {
+            checkWithResultCode(res, dispatch, () => {
+                dispatch(removeTaskAC(todolistId, taskId))
+            })
         })
         .catch(e => {
             errorUtils(e, dispatch)
-            dispatch(setAppStatusAC('failed'))
         })
 }
 export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispatch) => {
@@ -193,22 +196,13 @@ export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispa
     todolistsAPI
         .createTask(todolistId, title)
         .then(res => {
-            if (res.data.resultCode === 0) {
+            checkWithResultCode(res, dispatch, () => {
                 const task = res.data.data.item
                 dispatch(addTaskAC(task))
-                dispatch(setAppStatusAC('succeeded'))
-            } else {
-                if (res.data.messages.length) {
-                    dispatch(setAppErrorAC(res.data.messages[0]))
-                } else {
-                    dispatch(setAppErrorAC('Some error occurred'))
-                }
-                dispatch(setAppStatusAC('failed'))
-            }
+            })
         })
         .catch(e => {
             errorUtils(e, dispatch)
-            dispatch(setAppStatusAC('failed'))
         })
 }
 export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTaskModelType): AppThunk =>
@@ -229,21 +223,12 @@ export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTa
                     ...model
                 })
                 .then((res) => {
-                    if (res.data.resultCode === 0) {
+                    checkWithResultCode(res, dispatch, () => {
                         dispatch(updateTaskAC(todolistId, taskId, model))
-                        dispatch(setAppStatusAC('succeeded'))
-                    } else {
-                        if (res.data.messages.length) {
-                            dispatch(setAppErrorAC(res.data.messages[0]))
-                        } else {
-                            dispatch(setAppErrorAC('Some error occurred'))
-                        }
-                        dispatch(setAppStatusAC('failed'))
-                    }
+                    })
                 })
                 .catch(e => {
                     errorUtils(e, dispatch)
-                    dispatch(setAppStatusAC('failed'))
                 })
         }
 
