@@ -1,7 +1,7 @@
 import {authApi} from '../api/api';
 import {AppThunk} from './store';
 import {checkWithResultCode, errorUtils} from '../common/utils/error-utils';
-import {setIsLoggedInAC} from '../components/Login/auth-reducer';
+import {setIsLoggedIn} from '../components/Login/auth-reducer';
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -76,7 +76,7 @@ export const initializeAppTC = (): AppThunk => (dispatch) => {
     authApi.me()
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
-                dispatch(setIsLoggedInAC(true))
+                dispatch(setIsLoggedIn(true))
             })
         })
         .catch(e => {

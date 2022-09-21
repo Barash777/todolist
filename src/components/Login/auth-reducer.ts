@@ -2,7 +2,7 @@ import {setAppStatusAC} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {AppThunk} from '../../app/store';
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const initialState = {
     isLoggedIn: false
@@ -14,7 +14,7 @@ const slice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        setIsLoggedInAC(state, action) {
+        setIsLoggedIn(state, action: PayloadAction<boolean>) {
             // return {...state, ...action.payload}
             state.isLoggedIn = action.payload
         }
@@ -24,7 +24,7 @@ const slice = createSlice({
 // get reducer
 export const authReducer = slice.reducer;
 // get AC
-export const {setIsLoggedInAC} = slice.actions
+export const {setIsLoggedIn} = slice.actions
 
 /*export const authReducer = (state: AuthInitialStateType = initialState, action: UnionAuthActionsType): AuthInitialStateType => {
     switch (action.type) {
@@ -50,7 +50,7 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
     authApi.login(data)
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
-                dispatch(setIsLoggedInAC(true))
+                dispatch(setIsLoggedIn(true))
             })
         })
         .catch(e => {
@@ -62,7 +62,7 @@ export const logoutTC = (): AppThunk => (dispatch) => {
     authApi.logout()
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
-                dispatch(setIsLoggedInAC(false))
+                dispatch(setIsLoggedIn(false))
             })
         })
         .catch((e) => {
@@ -73,4 +73,4 @@ export const logoutTC = (): AppThunk => (dispatch) => {
 
 // types
 export type UnionAuthActionsType = SetIsLoggedInActionType
-type SetIsLoggedInActionType = ReturnType<typeof setIsLoggedInAC>
+type SetIsLoggedInActionType = ReturnType<typeof setIsLoggedIn>
