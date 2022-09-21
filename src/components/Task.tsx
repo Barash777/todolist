@@ -21,12 +21,20 @@ const Task = React.memo(({task, todolistId}: TaskPropsType) => {
         dispatch(removeTaskTC(todolistId, task.id))
     }
 
-    const onTitleChangeHandler = useCallback((title: string) => {
+    const onTitleChangeHandler = (title: string) => {
+        if (title === task.title) {
+            return;
+        }
+
         dispatch(updateTaskTC(todolistId, task.id, {title}))
-    }, [dispatch])
+    }
 
     const onChangeTaskStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const status: TaskStatuses = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
+        /*if (status === task.status) {
+            return;
+        }*/
+
         dispatch(updateTaskTC(todolistId, task.id, {status}))
     }, [dispatch])
 
