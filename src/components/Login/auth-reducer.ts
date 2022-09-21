@@ -10,7 +10,7 @@ const initialState = {
 // type AuthInitialStateType = typeof initialState
 
 
-const slice = createSlice({
+const authSlice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
@@ -22,9 +22,9 @@ const slice = createSlice({
 })
 
 // get reducer
-export const authReducer = slice.reducer;
+export const authReducer = authSlice.reducer;
 // get AC
-export const {setIsLoggedIn} = slice.actions
+export const {setIsLoggedIn} = authSlice.actions
 
 /*export const authReducer = (state: AuthInitialStateType = initialState, action: UnionAuthActionsType): AuthInitialStateType => {
     switch (action.type) {

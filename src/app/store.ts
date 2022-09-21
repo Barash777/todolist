@@ -3,9 +3,9 @@ import {/*applyMiddleware, compose,*/ combineReducers} from 'redux';
 import {todolistsReducer, UnionTodolistsActionType} from '../components/Todolists/todolists-reducer';
 import {tasksReducer, UnionTasksActionType} from '../components/Todolists/tasks-reducer';
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk';
-import {appReducer, UnionAppActionsType} from './app-reducer';
-import {authReducer, UnionAuthActionsType} from '../components/Login/auth-reducer';
-import {configureStore, MiddlewareArray} from '@reduxjs/toolkit';
+import {appReducer, RequestStatusType} from './app-reducer';
+import {authReducer} from '../components/Login/auth-reducer';
+import {configureStore, MiddlewareArray, PayloadAction} from '@reduxjs/toolkit';
 
 /*declare global {
     interface Window {
@@ -29,12 +29,29 @@ export const store = configureStore({
     middleware: new MiddlewareArray().concat(thunkMiddleware),
 })
 
+
 export type AppStateType = ReturnType<typeof rootReducer>
+/*// type two = ReturnType<typeof appSlice.actions>
+type three = ReturnType<typeof appSlice.actions.setAppError>
+
+console.log('1', typeof appSlice.actions)
+// console.log('2', two)
+console.log('3', three)*/
+
+
+export type MyAppActionsType = {
+    payload: RequestStatusType | boolean | null | string
+    type: string
+}
+
+type PayloadTypes = RequestStatusType | boolean | null | string
 
 export type AppActionsType = UnionTodolistsActionType
     | UnionTasksActionType
-    | UnionAppActionsType
-    | UnionAuthActionsType
+    | PayloadAction<PayloadTypes>
+// | UnionAppActionsType
+// | UnionAuthActionsType
+
 // export type AppDispatch = typeof store.dispatch
 export type AppDispatch = ThunkDispatch<AppStateType, unknown, AppActionsType>
 

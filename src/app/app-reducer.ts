@@ -15,7 +15,7 @@ const initialState = {
 
 // type AppInitialStateType = typeof initialState
 
-const slice = createSlice({
+const appSlice = createSlice({
     name: 'app',
     initialState: initialState,
     reducers: {
@@ -34,8 +34,8 @@ const slice = createSlice({
     }
 })
 
-export const appReducer = slice.reducer;
-export const {setAppStatus, setAppError, setAppSuccess, setAppIsInitialized} = slice.actions
+export const appReducer = appSlice.reducer;
+export const {setAppStatus, setAppError, setAppSuccess, setAppIsInitialized} = appSlice.actions
 
 /*export const appReducer = (state: AppInitialStateType = initialState, action: UnionAppActionsType): AppInitialStateType => {
     switch (action.type) {
