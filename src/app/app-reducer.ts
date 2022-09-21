@@ -20,12 +20,12 @@ export const appReducer = (state: AppInitialStateType = initialState, action: Un
 }
 
 // types
-export type UnionAppActionsType = SetAppStatusAC
-    | SetAppErrorAC
-    | SetAppSuccessAC
-type SetAppStatusAC = ReturnType<typeof setAppStatusAC>
-type SetAppErrorAC = ReturnType<typeof setAppErrorAC>
-type SetAppSuccessAC = ReturnType<typeof setAppSuccessAC>
+export type UnionAppActionsType = SetAppStatusActionType
+    | SetAppErrorActionType
+    | SetAppSuccessActionType
+export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
+export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
+export type SetAppSuccessActionType = ReturnType<typeof setAppSuccessAC>
 
 // ACs
 export const setAppStatusAC = (status: RequestStatusType) => {

@@ -3,6 +3,7 @@ import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType}
 import {AppStateType, AppThunk} from './store';
 import {TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
 import {setAppErrorAC, setAppStatusAC} from '../app/app-reducer';
+import {errorUtils} from '../utils/error-utils';
 
 const initialState: TasksStateType = {}
 
@@ -169,6 +170,10 @@ export const getTasksTC = (todolistId: string): AppThunk => (dispatch) => {
             dispatch(setTasksAC(todolistId, res.data.items))
             dispatch(setAppStatusAC('succeeded'))
         })
+        .catch(e => {
+            errorUtils(e, dispatch)
+            dispatch(setAppStatusAC('failed'))
+        })
 }
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
@@ -177,6 +182,10 @@ export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (d
         .then(() => {
             dispatch(removeTaskAC(todolistId, taskId))
             dispatch(setAppStatusAC('succeeded'))
+        })
+        .catch(e => {
+            errorUtils(e, dispatch)
+            dispatch(setAppStatusAC('failed'))
         })
 }
 export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispatch) => {
@@ -198,8 +207,8 @@ export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispa
             }
         })
         .catch(e => {
+            errorUtils(e, dispatch)
             dispatch(setAppStatusAC('failed'))
-            dispatch(setAppErrorAC(e.message))
         })
 }
 export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTaskModelType): AppThunk =>
@@ -233,8 +242,8 @@ export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTa
                     }
                 })
                 .catch(e => {
+                    errorUtils(e, dispatch)
                     dispatch(setAppStatusAC('failed'))
-                    dispatch(setAppErrorAC(e.message))
                 })
         }
 
