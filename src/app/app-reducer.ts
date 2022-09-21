@@ -2,6 +2,7 @@ import {authApi} from '../api/api';
 import {AppThunk} from './store';
 import {checkWithResultCode, errorUtils} from '../common/utils/error-utils';
 import {setIsLoggedIn} from '../components/Login/auth-reducer';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -12,9 +13,31 @@ const initialState = {
     isInitialized: false
 }
 
-type AppInitialStateType = typeof initialState
+// type AppInitialStateType = typeof initialState
 
-export const appReducer = (state: AppInitialStateType = initialState, action: UnionAppActionsType): AppInitialStateType => {
+const slice = createSlice({
+    name: 'app',
+    initialState: initialState,
+    reducers: {
+        setAppStatus(state, action: PayloadAction<RequestStatusType>) {
+            state.status = action.payload
+        },
+        setAppError(state, action: PayloadAction<null | string>) {
+            state.error = action.payload
+        },
+        setAppSuccess(state, action: PayloadAction<null | string>) {
+            state.success = action.payload
+        },
+        setAppIsInitialized(state, action: PayloadAction<boolean>) {
+            state.isInitialized = action.payload
+        }
+    }
+})
+
+export const appReducer = slice.reducer;
+export const {setAppStatus, setAppError, setAppSuccess, setAppIsInitialized} = slice.actions
+
+/*export const appReducer = (state: AppInitialStateType = initialState, action: UnionAppActionsType): AppInitialStateType => {
     switch (action.type) {
         case 'APP/SET-STATUS':
         case 'APP/SET-ERROR':
@@ -24,20 +47,20 @@ export const appReducer = (state: AppInitialStateType = initialState, action: Un
         default:
             return state
     }
-}
+}*/
 
 // types
 export type UnionAppActionsType = SetAppStatusActionType
     | SetAppErrorActionType
     | SetAppSuccessActionType
     | SetAppIsInitializedActionType
-export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
-export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
-export type SetAppSuccessActionType = ReturnType<typeof setAppSuccessAC>
-export type SetAppIsInitializedActionType = ReturnType<typeof setAppIsInitializedAC>
+export type SetAppStatusActionType = ReturnType<typeof setAppStatus>
+export type SetAppErrorActionType = ReturnType<typeof setAppError>
+export type SetAppSuccessActionType = ReturnType<typeof setAppSuccess>
+export type SetAppIsInitializedActionType = ReturnType<typeof setAppIsInitialized>
 
-// ACs
-export const setAppStatusAC = (status: RequestStatusType) => {
+/*// ACs
+export const setAppStatus = (status: RequestStatusType) => {
     return {
         type: 'APP/SET-STATUS',
         payload: {
@@ -45,7 +68,7 @@ export const setAppStatusAC = (status: RequestStatusType) => {
         }
     } as const
 }
-export const setAppErrorAC = (error: string | null) => {
+export const setAppError = (error: string | null) => {
     return {
         type: 'APP/SET-ERROR',
         payload: {
@@ -53,7 +76,7 @@ export const setAppErrorAC = (error: string | null) => {
         }
     } as const
 }
-export const setAppSuccessAC = (success: string | null) => {
+export const setAppSuccess = (success: string | null) => {
     return {
         type: 'APP/SET-SUCCESS',
         payload: {
@@ -61,18 +84,18 @@ export const setAppSuccessAC = (success: string | null) => {
         }
     } as const
 }
-export const setAppIsInitializedAC = (isInitialized: boolean) => {
+export const setAppIsInitialized = (isInitialized: boolean) => {
     return {
         type: 'APP/SET-IS-INITIALIZED',
         payload: {
             isInitialized
         }
     } as const
-}
+}*/
 
 // thunk
 export const initializeAppTC = (): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatus('loading'))
     authApi.me()
         .then(res => {
             checkWithResultCode(res, dispatch, () => {
@@ -83,6 +106,6 @@ export const initializeAppTC = (): AppThunk => (dispatch) => {
             errorUtils(e, dispatch)
         })
         .finally(() => {
-            dispatch(setAppIsInitializedAC(true))
+            dispatch(setAppIsInitialized(true))
         })
 }

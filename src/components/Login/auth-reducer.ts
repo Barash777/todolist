@@ -1,4 +1,4 @@
-import {setAppStatusAC} from '../../app/app-reducer'
+import {setAppStatus} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {AppThunk} from '../../app/store';
@@ -46,7 +46,7 @@ export const {setIsLoggedIn} = slice.actions
 
 // thunks
 export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatus('loading'))
     authApi.login(data)
         .then((res) => {
             checkWithResultCode(res, dispatch, () => {
@@ -58,7 +58,7 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
         })
 }
 export const logoutTC = (): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatus('loading'))
     authApi.logout()
         .then(res => {
             checkWithResultCode(res, dispatch, () => {

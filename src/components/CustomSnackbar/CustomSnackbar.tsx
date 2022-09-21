@@ -3,7 +3,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import {AlertColor} from '@mui/material/Alert/Alert';
 import {useAppDispatch, useAppSelector} from '../../common/hooks/hooks';
-import {setAppErrorAC, setAppSuccessAC} from '../../app/app-reducer';
+import {setAppError, setAppSuccess} from '../../app/app-reducer';
 
 
 export const UniversalSnackbar = () => {
@@ -15,8 +15,8 @@ export const UniversalSnackbar = () => {
 
     const handleClose = async () => {
         // reset error after X seconds
-        error && dispatch(setAppErrorAC(null))
-        success && dispatch(setAppSuccessAC(null))
+        error && dispatch(setAppError(null))
+        success && dispatch(setAppSuccess(null))
     }
 
     const isOpen: boolean = !!error || !!success

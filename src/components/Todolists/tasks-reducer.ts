@@ -5,7 +5,7 @@ import {
 } from './todolists-reducer';
 import {AppStateType, AppThunk} from '../../app/store';
 import {TaskType, todolistApi, UpdateTaskModelType} from '../../api/api';
-import {RequestStatusType, setAppStatusAC} from '../../app/app-reducer';
+import {RequestStatusType, setAppStatus} from '../../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 
 const initialState = {} as TasksStateType
@@ -199,19 +199,19 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateTa
 
 // THUNKS
 export const getTasksTC = (todolistId: string): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatus('loading'))
     todolistApi
         .getTasks(todolistId)
         .then(res => {
             dispatch(setTasksAC(todolistId, res.data.items))
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatus('succeeded'))
         })
         .catch(e => {
             errorUtils(e, dispatch)
         })
 }
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatus('loading'))
     dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'loading'))
     todolistApi
         .deleteTask(todolistId, taskId)
@@ -226,7 +226,7 @@ export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => (d
         })
 }
 export const addTaskTC = (todolistId: string, title: string): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatus('loading'))
     todolistApi
         .createTask(todolistId, title)
         .then(res => {
@@ -245,7 +245,7 @@ export const updateTaskTC = (todolistId: string, taskId: string, model: UpdateTa
         const task = getState().tasks[todolistId].find(t => t.id === taskId)
 
         if (task) {
-            dispatch(setAppStatusAC('loading'))
+            dispatch(setAppStatus('loading'))
             dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'loading'))
             todolistApi
                 .updateTask(todolistId, taskId, {
