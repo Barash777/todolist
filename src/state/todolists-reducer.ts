@@ -148,6 +148,7 @@ export const removeTodolistTC = (id: string): AppThunk => (dispatch) => {
 }
 export const updateTodolistTC = (id: string, title: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(changeTodolistEntityStatusAC(id, 'loading'))
     todolistsAPI
         .updateTodolist(id, title)
         .then((res) => {
@@ -157,5 +158,8 @@ export const updateTodolistTC = (id: string, title: string): AppThunk => (dispat
         })
         .catch(e => {
             errorUtils(e, dispatch)
+        })
+        .finally(() => {
+            dispatch(changeTodolistEntityStatusAC(id, 'idle'))
         })
 }

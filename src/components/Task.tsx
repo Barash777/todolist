@@ -1,15 +1,15 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import {removeTaskTC, updateTaskTC} from '../state/tasks-reducer';
+import {DomainTaskType, removeTaskTC, updateTaskTC} from '../state/tasks-reducer';
 // import Checkbox from './Checkbox';
 import {EditableSpan} from './EditableSpan';
-import {TaskStatuses, TaskType} from '../api/todolists-api';
+import {TaskStatuses} from '../api/todolists-api';
 import {useAppDispatch} from '../app/hooks';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import Checkbox from '@mui/material/Checkbox';
 
 export type TaskPropsType = {
-    task: TaskType
+    task: DomainTaskType
     todolistId: string
 }
 
@@ -39,6 +39,8 @@ const Task = React.memo(({task, todolistId}: TaskPropsType) => {
     }, [dispatch])
 
 
+    const isDisabled = task.entityStatus === 'loading'
+
     return (
 
         <div key={task.id} className={task.status === TaskStatuses.Completed ? 'is-done' : ''}>
@@ -46,10 +48,11 @@ const Task = React.memo(({task, todolistId}: TaskPropsType) => {
                 checked={task.status === TaskStatuses.Completed}
                 color="primary"
                 onChange={onChangeTaskStatusHandler}
+                disabled={isDisabled}
             />
 
-            <EditableSpan value={task.title} onChange={onTitleChangeHandler}/>
-            <IconButton onClick={onClickDeleteHandler}>
+            <EditableSpan value={task.title} onChange={onTitleChangeHandler} disabled={isDisabled}/>
+            <IconButton onClick={onClickDeleteHandler} disabled={isDisabled}>
                 <Delete/>
             </IconButton>
         </div>

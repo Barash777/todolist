@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-import {action} from '@storybook/addon-actions';
+// import {action} from '@storybook/addon-actions';
 import Task from '../components/Task';
 import {DecoratorProvider} from './DecoratorProvider';
 import {useSelector} from 'react-redux';
 import {AppStateType} from '../state/store';
-import {TaskType} from '../api/todolists-api';
-// import {TaskType} from '../components/Todolist';
+import {DomainTaskType} from '../state/tasks-reducer';
 
-const cb = action('button clicked')
+// const cb = action('button clicked')
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -29,7 +28,7 @@ BaseExample.args = {
 };*/
 
 export const BaseExample = () => {
-    const task = useSelector<AppStateType, TaskType>(state => state.tasks['todolistId1'][0]);
+    const task = useSelector<AppStateType, DomainTaskType>(state => state.tasks['todolistId1'][0]);
     const todolistId = 'todolistId1'
 
     return <Task task={task} todolistId={todolistId}/>

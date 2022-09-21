@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import {TaskType} from './api/todolists-api';
 import {Route, Routes} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import AppBar from '@mui/material/AppBar';
@@ -10,16 +9,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import Menu from '@mui/icons-material/Menu';
-// import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
 import {Login} from './components/Login/Login';
 import Todolists from './components/Todolists/Todolists';
 import {useAppSelector} from './app/hooks';
 import {UniversalSnackbar} from './components/CustomSnackbar/CustomSnackbar';
-
-
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
 
 
 function App() {
