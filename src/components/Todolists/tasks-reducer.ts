@@ -92,65 +92,74 @@ const tasksSlice = createSlice({
     initialState: initialState,
     reducers: {
         removeTask(state, action: PayloadAction<{ todolistId: string, taskId: string }>) {
-            return {
-                ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].filter(t => t.id !== action.payload.taskId)
+            const tasks = state[action.payload.todolistId]
+            const index = tasks.findIndex(t => t.id === action.payload.taskId)
+            if (index > -1) {
+                tasks.splice(index, 1)
             }
+            // return {
+            //     ...state,
+            //     [action.payload.todolistId]: state[action.payload.todolistId].filter(t => t.id !== action.payload.taskId)
+            // }
         },
         addTask(state, action: PayloadAction<TaskType>) {
-            return {
-                ...state,
-                [action.payload.todoListId]: [{
-                    ...action.payload,
-                    entityStatus: 'idle'
-                }, ...state[action.payload.todoListId]]
-            }
-        },
-        changeTaskStatus(state, action: PayloadAction<{ taskId: string, isDone: boolean, todolistId: string }>) {
-            return {
-                ...state,
-                [action.payload.todolistId]:
-                    state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
-                        ...t,
-                        isDone: action.payload.isDone
-                    } : t)
-            }
+            state[action.payload.todoListId].unshift({
+                ...action.payload,
+                entityStatus: 'idle'
+            })
+            // return {
+            //     ...state,
+            //     [action.payload.todoListId]: [{
+            //         ...action.payload,
+            //         entityStatus: 'idle'
+            //     }, ...state[action.payload.todoListId]]
+            // }
         },
         changeTaskEntityStatus(state, action: PayloadAction<{ todolistId: string, taskId: string, entityStatus: RequestStatusType }>) {
-            return {
+            let task = state[action.payload.todolistId].find(t => t.id === action.payload.taskId)
+            // console.log('1', task.id)
+            if (task) {
+                // task = action.payload.isDone
+                task.entityStatus = action.payload.entityStatus
+                // console.log(task.id)
+            }
+            /*return {
                 ...state,
                 [action.payload.todolistId]:
                     state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
                         ...t,
                         entityStatus: action.payload.entityStatus
                     } : t)
-            }
-        },
-        changeTaskTitle(state, action: PayloadAction<{ taskId: string, todolistId: string, title: string }>) {
-            return {
-                ...state,
-                [action.payload.todolistId]:
-                    state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
-                        ...t,
-                        title: action.payload.title
-                    } : t)
-            }
+            }*/
         },
         setTasks(state, action: PayloadAction<{ todolistId: string, tasks: TaskType[] }>) {
-            return {
+            state[action.payload.todolistId] = action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
+            /*return {
                 ...state,
                 [action.payload.todolistId]: action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
-            }
+            }*/
         },
         updateTask(state, action: PayloadAction<{ todolistId: string, taskId: string, model: UpdateTaskModelType }>) {
-            return {
+            const tasks = state[action.payload.todolistId]
+            const index = tasks.findIndex(t => t.id === action.payload.taskId)
+            if (index > -1) {
+                tasks[index] = {...tasks[index], ...action.payload.model}
+            }
+
+            /*const tasks = state[action.payload.todolistId]
+            let task = tasks.find(t => t.id === action.payload.taskId)
+            if (task) {
+                task = {...task, ...action.payload.model}
+            }*/
+
+            /*return {
                 ...state,
                 [action.payload.todolistId]: state[action.payload.todolistId].map(t => {
                     return t.id === action.payload.taskId
                         ? {...t, ...action.payload.model}
                         : t
                 })
-            }
+            }*/
         }
     },
     extraReducers: builder => {
@@ -176,9 +185,9 @@ export const tasksReducer = tasksSlice.reducer;
 export const {
     removeTask,
     addTask,
-    changeTaskStatus,
+    // changeTaskStatus,
     changeTaskEntityStatus,
-    changeTaskTitle,
+    // changeTaskTitle,
     setTasks,
     updateTask
 } = tasksSlice.actions
@@ -274,9 +283,7 @@ export const {
 export type UnionTasksActionType =
     RemoveTaskActionType |
     AddTaskActionType |
-    ChangeTaskStatusActionType |
     ChangeTaskEntityStatusActionType |
-    ChangeTaskTitleActionType |
     AddTodolistActionType |
     RemoveTodolistActionType |
     SetTodolistsActionType |
@@ -285,9 +292,7 @@ export type UnionTasksActionType =
 
 export type RemoveTaskActionType = ReturnType<typeof removeTask>
 export type AddTaskActionType = ReturnType<typeof addTask>
-export type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatus>
 export type ChangeTaskEntityStatusActionType = ReturnType<typeof changeTaskEntityStatus>
-export type ChangeTaskTitleActionType = ReturnType<typeof changeTaskTitle>
 export type SetTasksActionType = ReturnType<typeof setTasks>
 export type UpdateTaskActionType = ReturnType<typeof updateTask>
 
