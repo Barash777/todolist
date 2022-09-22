@@ -62,8 +62,7 @@ const tasksSlice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(addTodolist, (state, action) => {
-                const newId = action.payload.id
-                state[newId] = []
+                state[action.payload.id] = []
             })
             .addCase(removeTodolist, (state, action) => {
                 delete state[action.payload]
@@ -89,9 +88,6 @@ export type UnionTasksActionType =
     RemoveTaskActionType |
     AddTaskActionType |
     ChangeTaskEntityStatusActionType |
-    // AddTodolistActionType |
-    // RemoveTodolistActionType |
-    // SetTodolistsActionType |
     SetTasksActionType |
     UpdateTaskActionType
 
