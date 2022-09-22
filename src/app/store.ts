@@ -1,11 +1,12 @@
 import {/*applyMiddleware, compose,*/ combineReducers} from 'redux';
 // import {legacy_createStore as createStore} from 'redux'
-import {todolistsReducer, UnionTodolistsActionType} from '../components/Todolists/todolists-reducer';
+import {FilterValuesType, todolistsReducer, UnionTodolistsActionType} from '../components/Todolists/todolists-reducer';
 import {tasksReducer, UnionTasksActionType} from '../components/Todolists/tasks-reducer';
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk';
-import {appReducer, RequestStatusType} from './app-reducer';
-import {authReducer} from '../components/Login/auth-reducer';
+import {appReducer, RequestStatusType, UnionAppActionsType} from './app-reducer';
+import {authReducer, UnionAuthActionsType} from '../components/Login/auth-reducer';
 import {configureStore, MiddlewareArray, PayloadAction} from '@reduxjs/toolkit';
+import {TaskType, TodolistType, UpdateTaskModelType} from '../api/api';
 
 /*declare global {
     interface Window {
@@ -31,26 +32,30 @@ export const store = configureStore({
 
 
 export type AppStateType = ReturnType<typeof rootReducer>
-/*// type two = ReturnType<typeof appSlice.actions>
-type three = ReturnType<typeof appSlice.actions.setAppError>
 
-console.log('1', typeof appSlice.actions)
-// console.log('2', two)
-console.log('3', three)*/
+type PayloadTypes = RequestStatusType
+    | boolean
+    | null
+    | string
+    | TodolistType
+    | { id: string, filter: FilterValuesType }
+    | { id: string, title: string }
+    | { id: string, entityStatus: RequestStatusType }
+    | Array<TodolistType>
+    | { todolistId: string, taskId: string }
+    | TaskType
+    | { todolistId: string, taskId: string, isDone: boolean }
+    | { todolistId: string, taskId: string, entityStatus: RequestStatusType }
+    | { todolistId: string, taskId: string, title: string }
+    | { todolistId: string, tasks: TaskType[] }
+    | { todolistId: string, taskId: string, model: UpdateTaskModelType }
 
-
-export type MyAppActionsType = {
-    payload: RequestStatusType | boolean | null | string
-    type: string
-}
-
-type PayloadTypes = RequestStatusType | boolean | null | string
-
-export type AppActionsType = UnionTodolistsActionType
+// export type AppActionsType = PayloadAction<PayloadTypes>
+export type AppActionsType =
+    UnionAppActionsType
+    | UnionAuthActionsType
     | UnionTasksActionType
-    | PayloadAction<PayloadTypes>
-// | UnionAppActionsType
-// | UnionAuthActionsType
+    | UnionTodolistsActionType
 
 // export type AppDispatch = typeof store.dispatch
 export type AppDispatch = ThunkDispatch<AppStateType, unknown, AppActionsType>

@@ -3,7 +3,7 @@ import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {EditableSpan} from '../../EditableSpan/EditableSpan';
 import {addTaskTC, getTasksTC} from '../tasks-reducer';
 import {
-    changeFilterAC,
+    changeFilter,
     FilterValuesType,
     removeTodolistTC,
     TodolistDomainType,
@@ -40,8 +40,8 @@ export const Todolist = React.memo((props: PropsType) => {
     const changeTodolistTitle = useCallback((title: string) => {
         dispatch(updateTodolistTC(id, title))
     }, [dispatch])
-    const onChangeFilterHandler = (value: FilterValuesType) => {
-        dispatch(changeFilterAC(id, value))
+    const onChangeFilterHandler = (filter: FilterValuesType) => {
+        dispatch(changeFilter({id, filter}))
     }
 
 
