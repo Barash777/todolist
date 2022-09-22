@@ -37,6 +37,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
+    "storybook-social": "start-storybook -p 9009 -s public",
     "storybook-dev": "start-storybook -p 6006 -s public --no-dll",
     "build-storybook": "build-storybook -s public",
     "jest:integration": "jest -c integration/jest.config.js",

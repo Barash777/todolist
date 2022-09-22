@@ -9,6 +9,7 @@ import {appReducer, RequestStatusType} from '../../app/app-reducer';
 import {authReducer} from '../../components/Login/auth-reducer';
 import {configureStore, MiddlewareArray} from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
+import {HashRouter} from 'react-router-dom';
 
 
 const rootReducer = combineReducers({
@@ -132,6 +133,8 @@ export const storyBookStore = configureStore({
 
 export const DecoratorProvider = (Story: React.ElementType) => (
     <Provider store={storyBookStore}>
-        <Story/>
+        <HashRouter>
+            <Story/>
+        </HashRouter>
     </Provider>
 )

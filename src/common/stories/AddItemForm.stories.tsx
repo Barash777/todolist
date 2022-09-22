@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
@@ -25,13 +25,3 @@ export const BaseExample = Template.bind({});
 BaseExample.args = {
     addItem: addItemFormCallback
 };
-
-export const AddItemFormWithError = () => {
-    const setError = (title: string) => {
-        addItemFormCallback()
-    }
-
-    // setError()
-
-    return <AddItemForm addItem={() => setError('')}/>
-}
