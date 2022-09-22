@@ -65,31 +65,6 @@ export const {
 
 export const todolistsReducer = todolistSlice.reducer;
 
-/*export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: UnionTodolistsActionType): Array<TodolistDomainType> => {
-    switch (action.type) {
-        case 'REMOVE-TODOLIST':
-            return state.filter(tl => tl.id !== action.payload.id)
-        case 'ADD-TODOLIST':
-            return [{
-                ...action.payload.todolist,
-                filter: 'all',
-                entityStatus: 'idle'
-            }, ...state]
-        case 'CHANGE-TODOLIST-FILTER':
-            return state.map(e => e.id === action.payload.id ? {...e, filter: action.payload.filter} : e)
-        case 'CHANGE-TODOLIST-TITLE':
-            return state.map(e => e.id === action.payload.id ? {...e, title: action.payload.title} : e)
-        case 'CHANGE-TODOLIST-ENTITY-STATUS':
-            return state.map(e => e.id === action.payload.id ? {...e, entityStatus: action.payload.entityStatus} : e)
-        case 'SET-TODOLISTS':
-            return action.payload.todolists.map(t => {
-                return {...t, filter: 'all', entityStatus: 'idle'}
-            })
-        default:
-            return state
-    }
-}*/
-
 export type UnionTodolistsActionType =
     RemoveTodolistActionType |
     AddTodolistActionType |
@@ -104,59 +79,6 @@ export type ChangeFilterActionType = ReturnType<typeof changeFilter>
 export type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitle>
 export type ChangeTodolistEntityStatusActionType = ReturnType<typeof changeTodolistEntityStatus>
 export type SetTodolistsActionType = ReturnType<typeof setTodolists>
-
-
-/*export const removeTodolist = (id: string) => {
-    return {
-        type: 'REMOVE-TODOLIST',
-        payload: {
-            id
-        }
-    } as const
-}
-export const addTodolist = (todolist: TodolistType) => {
-    return {
-        type: 'ADD-TODOLIST',
-        payload: {
-            todolist
-        }
-    } as const
-}
-export const changeFilter = (id: string, filter: FilterValuesType) => {
-    return {
-        type: 'CHANGE-TODOLIST-FILTER',
-        payload: {
-            id,
-            filter
-        }
-    } as const
-}
-export const changeTodolistTitle = (id: string, title: string) => {
-    return {
-        type: 'CHANGE-TODOLIST-TITLE',
-        payload: {
-            id,
-            title
-        }
-    } as const
-}
-export const changeTodolistEntityStatus = (id: string, entityStatus: RequestStatusType) => {
-    return {
-        type: 'CHANGE-TODOLIST-ENTITY-STATUS',
-        payload: {
-            id,
-            entityStatus
-        }
-    } as const
-}
-export const setTodolists = (todolists: Array<TodolistType>) => {
-    return {
-        type: 'SET-TODOLISTS',
-        payload: {
-            todolists
-        }
-    } as const
-}*/
 
 
 // THUNKS

@@ -1,8 +1,7 @@
 import {
     addTodolist,
-    AddTodolistActionType, removeTodolist,
-    RemoveTodolistActionType, setTodolists,
-    SetTodolistsActionType
+    removeTodolist,
+    setTodolists,
 } from './todolists-reducer';
 import {AppStateType, AppThunk} from '../../app/store';
 import {TaskType, todolistApi, UpdateTaskModelType} from '../../api/api';
@@ -20,73 +19,6 @@ export type TasksStateType = {
 }
 
 
-/*export const removeTask = (todolistId: string, taskId: string) => {
-    return {
-        type: 'REMOVE-TASK',
-        payload: {
-            taskId,
-            todolistId
-        }
-    } as const
-}
-export const addTask = (task: TaskType) => {
-    return {
-        type: 'ADD-TASK',
-        payload: {
-            task
-        }
-    } as const
-}
-export const changeTaskStatus = (taskId: string, isDone: boolean, todolistId: string) => {
-    return {
-        type: 'CHANGE-TASK-STATUS',
-        payload: {
-            taskId,
-            isDone,
-            todolistId
-        }
-    } as const
-}
-export const changeTaskEntityStatus = (todolistId: string, taskId: string, entityStatus: RequestStatusType) => {
-    return {
-        type: 'CHANGE-TASK-ENTITY-STATUS',
-        payload: {
-            taskId,
-            entityStatus,
-            todolistId
-        }
-    } as const
-}
-export const changeTaskTitle = (taskId: string, todolistId: string, title: string) => {
-    return {
-        type: 'CHANGE-TASK-TITLE',
-        payload: {
-            taskId,
-            todolistId,
-            title
-        }
-    } as const
-}
-export const setTasks = (todolistId: string, tasks: TaskType[]) => {
-    return {
-        type: 'SET-TASKS',
-        payload: {
-            todolistId,
-            tasks
-        }
-    } as const
-}
-export const updateTask = (todolistId: string, taskId: string, model: UpdateTaskModelType) => {
-    return {
-        type: 'UPDATE-TASK',
-        payload: {
-            todolistId,
-            taskId,
-            model
-        }
-    } as const
-}*/
-
 const tasksSlice = createSlice({
     name: 'tasks',
     initialState: initialState,
@@ -97,47 +29,21 @@ const tasksSlice = createSlice({
             if (index > -1) {
                 tasks.splice(index, 1)
             }
-            // return {
-            //     ...state,
-            //     [action.payload.todolistId]: state[action.payload.todolistId].filter(t => t.id !== action.payload.taskId)
-            // }
         },
         addTask(state, action: PayloadAction<TaskType>) {
             state[action.payload.todoListId].unshift({
                 ...action.payload,
                 entityStatus: 'idle'
             })
-            // return {
-            //     ...state,
-            //     [action.payload.todoListId]: [{
-            //         ...action.payload,
-            //         entityStatus: 'idle'
-            //     }, ...state[action.payload.todoListId]]
-            // }
         },
         changeTaskEntityStatus(state, action: PayloadAction<{ todolistId: string, taskId: string, entityStatus: RequestStatusType }>) {
             let task = state[action.payload.todolistId].find(t => t.id === action.payload.taskId)
-            // console.log('1', task.id)
             if (task) {
-                // task = action.payload.isDone
                 task.entityStatus = action.payload.entityStatus
-                // console.log(task.id)
             }
-            /*return {
-                ...state,
-                [action.payload.todolistId]:
-                    state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
-                        ...t,
-                        entityStatus: action.payload.entityStatus
-                    } : t)
-            }*/
         },
         setTasks(state, action: PayloadAction<{ todolistId: string, tasks: TaskType[] }>) {
             state[action.payload.todolistId] = action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
-            /*return {
-                ...state,
-                [action.payload.todolistId]: action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
-            }*/
         },
         updateTask(state, action: PayloadAction<{ todolistId: string, taskId: string, model: UpdateTaskModelType }>) {
             const tasks = state[action.payload.todolistId]
@@ -151,15 +57,6 @@ const tasksSlice = createSlice({
             if (task) {
                 task = {...task, ...action.payload.model}
             }*/
-
-            /*return {
-                ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].map(t => {
-                    return t.id === action.payload.taskId
-                        ? {...t, ...action.payload.model}
-                        : t
-                })
-            }*/
         }
     },
     extraReducers: builder => {
@@ -172,11 +69,9 @@ const tasksSlice = createSlice({
                 delete state[action.payload]
             })
             .addCase(setTodolists, (state, action) => {
-                // const copy = {...state}
                 action.payload.forEach(t => {
                     state[t.id] = [];
                 })
-                // return copy
             })
     }
 })
@@ -185,108 +80,18 @@ export const tasksReducer = tasksSlice.reducer;
 export const {
     removeTask,
     addTask,
-    // changeTaskStatus,
     changeTaskEntityStatus,
-    // changeTaskTitle,
     setTasks,
     updateTask
 } = tasksSlice.actions
-
-/*export const tasksReducer = (state: TasksInitialStateType = initialState, action: UnionTasksActionType): TasksInitialStateType => {
-    switch (action.type) {
-        case 'REMOVE-TASK':
-            return {
-                ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].filter(t => t.id !== action.payload.taskId)
-            }
-        case 'ADD-TASK': {
-            // const newTask: TaskType = {id: v1(), title: action.payload.title, isDone: false}
-            return {
-                ...state,
-                [action.payload.task.todoListId]: [{
-                    ...action.payload.task,
-                    entityStatus: 'idle'
-                }, ...state[action.payload.task.todoListId]]
-            }
-        }
-        case 'CHANGE-TASK-STATUS':
-            return {
-                ...state,
-                [action.payload.todolistId]:
-                    state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
-                        ...t,
-                        isDone: action.payload.isDone
-                    } : t)
-            }
-        case 'CHANGE-TASK-ENTITY-STATUS':
-            return {
-                ...state,
-                [action.payload.todolistId]:
-                    state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
-                        ...t,
-                        entityStatus: action.payload.entityStatus
-                    } : t)
-            }
-        case 'CHANGE-TASK-TITLE':
-            return {
-                ...state,
-                [action.payload.todolistId]:
-                    state[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
-                        ...t,
-                        title: action.payload.title
-                    } : t)
-            }
-        case 'ADD-TODOLIST': {
-            const newId = action.payload.todolist.id
-            return {
-                ...state,
-                [newId]: []
-            }
-        }
-        case 'REMOVE-TODOLIST': {
-            const copy = {...state}
-            delete copy[action.payload.id]
-            return copy
-
-            /!*const copy = {...state}
-            const {[action.payload.id]: remove, ...rest} = copy;
-            return rest*!/
-        }
-        case 'SET-TODOLISTS': {
-            const copy = {...state}
-            action.payload.todolists.forEach(t => {
-                copy[t.id] = [];
-            })
-            return copy
-        }
-        case 'SET-TASKS': {
-            return {
-                ...state,
-                [action.payload.todolistId]: action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
-            }
-        }
-        case 'UPDATE-TASK': {
-            return {
-                ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].map(t => {
-                    return t.id === action.payload.taskId
-                        ? {...t, ...action.payload.model}
-                        : t
-                })
-            }
-        }
-        default:
-            return state
-    }
-}*/
 
 export type UnionTasksActionType =
     RemoveTaskActionType |
     AddTaskActionType |
     ChangeTaskEntityStatusActionType |
-    AddTodolistActionType |
-    RemoveTodolistActionType |
-    SetTodolistsActionType |
+    // AddTodolistActionType |
+    // RemoveTodolistActionType |
+    // SetTodolistsActionType |
     SetTasksActionType |
     UpdateTaskActionType
 

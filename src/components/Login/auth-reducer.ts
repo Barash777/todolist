@@ -7,7 +7,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 const initialState = {
     isLoggedIn: false
 }
-// type AuthInitialStateType = typeof initialState
 
 
 const authSlice = createSlice({
@@ -15,7 +14,6 @@ const authSlice = createSlice({
     initialState: initialState,
     reducers: {
         setIsLoggedIn(state, action: PayloadAction<boolean>) {
-            // return {...state, ...action.payload}
             state.isLoggedIn = action.payload
         }
     }
@@ -25,24 +23,6 @@ const authSlice = createSlice({
 export const authReducer = authSlice.reducer;
 // get AC
 export const {setIsLoggedIn} = authSlice.actions
-
-/*export const authReducer = (state: AuthInitialStateType = initialState, action: UnionAuthActionsType): AuthInitialStateType => {
-    switch (action.type) {
-        case 'AUTH/SET-IS-LOGGED-IN':
-            return {...state, ...action.payload}
-        default:
-            return state
-    }
-}*/
-// actions
-/*export const setIsLoggedInAC = (isLoggedIn: boolean) => {
-    return {
-        type: 'AUTH/SET-IS-LOGGED-IN',
-        payload: {
-            isLoggedIn
-        }
-    } as const
-}*/
 
 // thunks
 export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
