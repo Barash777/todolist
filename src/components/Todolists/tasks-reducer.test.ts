@@ -1,4 +1,4 @@
-import {addTask, removeTask, tasksReducer, TasksStateType, updateTask} from './tasks-reducer';
+import {addTask, getTasksTC, removeTask, tasksReducer, TasksStateType, updateTask} from './tasks-reducer';
 import {TaskPriorities, TaskStatuses} from '../../api/api';
 import {addTodolist, removeTodolist} from './todolists-reducer';
 
@@ -252,3 +252,37 @@ test('property with todolistId should be deleted', () => {
     expect(keys.length).toBe(1)
     expect(endState[todoId2]).not.toBeDefined()
 })
+
+test('tasks should be added for todolist', () => {
+
+    const tasks = [
+        {
+            id: '1',
+            title: 'CSS',
+            description: '',
+            status: TaskStatuses.New,
+            priority: TaskPriorities.Low,
+            startDate: '',
+            deadline: '',
+            todoListId: todoId1,
+            order: 0,
+            addedDate: '',
+            entityStatus: 'idle'
+        }
+    ]
+    const action = getTasksTC.fulfilled({todolistId: todoId2, tasks}, '', todoId2)
+
+    /*const action = {
+        type: 'CHANGE-TODOLIST-FILTER',
+        id: todolistId2,
+        filter: newFilter
+    };*/
+
+    const endState = tasksReducer(startState, action);
+
+    expect(startState[todoId1].length).toBe(3);
+    expect(startState[todoId2].length).toBe(3);
+    expect(endState[todoId1].length).toBe(3);
+    expect(endState[todoId2].length).toBe(1);
+});
+
