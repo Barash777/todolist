@@ -18,16 +18,26 @@ export type TasksStateType = {
     [key: string]: Array<DomainTaskType>
 }
 
-export const getTasksTC = createAsyncThunk('tasks/getTasks', (todolistId: string, thunkAPI) => {
+export const getTasksTC = createAsyncThunk('tasks/getTasks', async (todolistId: string, thunkAPI) => {
     const {dispatch} = thunkAPI
     dispatch(setAppStatus('loading'))
-    return todolistApi
+    try {
+        const res = await todolistApi.getTasks(todolistId)
+        dispatch(setAppStatus('succeeded'))
+        return {todolistId, tasks: res.data.items}
+    } catch (e: any) {
+        errorUtils(e, dispatch)
+        return thunkAPI.rejectWithValue(e)
+    }
+
+
+    /*return todolistApi
         .getTasks(todolistId)
         .then(res => {
             dispatch(setAppStatus('succeeded'))
             // dispatch(setTasks({todolistId, tasks: res.data.items}))
             return {todolistId, tasks: res.data.items}
-        })
+        })*/
     // .catch(e => {
     //     errorUtils(e, dispatch)
     //     return (e)
@@ -52,14 +62,16 @@ export const removeTaskTC = createAsyncThunk('tasks/removeTask', (param: { todol
                 // return new Promise((resolve, reject) => {
                 //     reject({todolistId, taskId})
                 // })
+                return ({todolistId, taskId})
+            } else {
+                return thunkAPI.rejectWithValue(res)
             }
-            return ({todolistId, taskId})
         })
-    // .catch(e => {
-    //     errorUtils(e, dispatch)
-    //     dispatch(changeTaskEntityStatus({todolistId, taskId, entityStatus: 'idle'}))
-    //     return (e)
-    // })
+        .catch(e => {
+            errorUtils(e, dispatch)
+            dispatch(changeTaskEntityStatus({todolistId, taskId, entityStatus: 'idle'}))
+            return thunkAPI.rejectWithValue(e)
+        })
 })
 export const addTaskTC = createAsyncThunk('tasks/addTask', (param: { todolistId: string, title: string }, thunkAPI) => {
     const {dispatch} = thunkAPI
@@ -68,18 +80,23 @@ export const addTaskTC = createAsyncThunk('tasks/addTask', (param: { todolistId:
     return todolistApi
         .createTask(todolistId, title)
         .then(res => {
-            checkWithResultCode(res, dispatch, () => {
+            if (checkWithResultCode(res, dispatch, () => {
                 // const task = res.data.data.item
                 // dispatch(addTask(task))
                 dispatch(setAppSuccess('You added new task'))
-            })
+            })) {
+                const task = res.data.data.item
+                return (task)
+            } else {
+                return thunkAPI.rejectWithValue(res)
+            }
 
-            const task = res.data.data.item
-            return (task)
+
         })
-    // .catch(e => {
-    //     errorUtils(e, dispatch)
-    // })
+        .catch(e => {
+            errorUtils(e, dispatch)
+            return thunkAPI.rejectWithValue(e)
+        })
 })
 
 // THUNKS
@@ -205,6 +222,10 @@ const tasksSlice = createSlice({
             .addCase(getTasksTC.fulfilled, (state, action) => {
                 state[action.payload.todolistId] = action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
             })
+            /*.addCase(getTasksTC.rejected, (state, action) => {
+                console.log(action)
+                // state[action.payload.todolistId] = action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
+            })*/
             .addCase(removeTaskTC.fulfilled, (state, action) => {
                 const tasks = state[action.payload.todolistId]
                 const index = tasks.findIndex(t => t.id === action.payload.taskId)
@@ -212,12 +233,18 @@ const tasksSlice = createSlice({
                     tasks.splice(index, 1)
                 }
             })
+            /*.addCase(removeTaskTC.rejected, (state, action) => {
+                console.log(action.payload)
+            })*/
             .addCase(addTaskTC.fulfilled, (state, action) => {
                 state[action.payload.todoListId].unshift({
                     ...action.payload,
                     entityStatus: 'idle'
                 })
             })
+        /*.addCase(addTaskTC.rejected, (state, action) => {
+            console.log('addTask: ', action)
+        })*/
     }
 })
 
