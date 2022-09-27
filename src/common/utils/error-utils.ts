@@ -31,10 +31,11 @@ export const errorUtils = (e: Error | AxiosError<{ error: string }>, dispatch: E
 
 type ErrorUtilsDispatchType = Dispatch<SetAppErrorActionType | SetAppStatusActionType>
 
-export const checkWithResultCode = (res: AxiosResponse, dispatch: ErrorUtilsDispatchType, fn: () => void) => {
+export const checkWithResultCode = (res: AxiosResponse, dispatch: ErrorUtilsDispatchType, fn: () => void): boolean => {
     if (res.data.resultCode === 0) {
         fn()
         dispatch(setAppStatus('succeeded'))
+        return true
     } else {
         if (res.data.messages.length) {
             dispatch(setAppError(res.data.messages[0]))
@@ -42,5 +43,6 @@ export const checkWithResultCode = (res: AxiosResponse, dispatch: ErrorUtilsDisp
             dispatch(setAppError('Some error occurred'))
         }
         dispatch(setAppStatus('failed'))
+        return false
     }
 }
