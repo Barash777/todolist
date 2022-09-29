@@ -1,12 +1,52 @@
 import {setAppStatus, setAppSuccess} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
-import {AppThunk} from '../../app/store';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const initialState = {
     isLoggedIn: false
 }
+
+export const loginTC = createAsyncThunk('auth/login', (data: LoginParamsType, thunkAPI) => {
+    const {dispatch} = thunkAPI
+
+    dispatch(setAppStatus('loading'))
+    return authApi.login(data)
+        .then((res) => {
+            if (checkWithResultCode(res, dispatch, () => {
+                // dispatch(setIsLoggedIn(true))
+                dispatch(setAppSuccess('You are successfully login'))
+            })) {
+                return true
+            } else {
+                return thunkAPI.rejectWithValue(res)
+            }
+        })
+        .catch(e => {
+            errorUtils(e, dispatch)
+            return thunkAPI.rejectWithValue(e)
+        })
+})
+export const logoutTC = createAsyncThunk('auth/logout', (arg, thunkAPI) => {
+    const {dispatch} = thunkAPI
+
+    dispatch(setAppStatus('loading'))
+    return authApi.logout()
+        .then(res => {
+            if (checkWithResultCode(res, dispatch, () => {
+                // dispatch(setIsLoggedIn(false))
+                dispatch(setAppSuccess('You are successfully logout'))
+            })) {
+                return false;
+            } else {
+                return thunkAPI.rejectWithValue(res)
+            }
+        })
+        .catch((e) => {
+            errorUtils(e, dispatch)
+            return thunkAPI.rejectWithValue(e)
+        })
+})
 
 
 const authSlice = createSlice({
@@ -16,6 +56,15 @@ const authSlice = createSlice({
         setIsLoggedIn(state, action: PayloadAction<boolean>) {
             state.isLoggedIn = action.payload
         }
+    },
+    extraReducers: builder => {
+        builder
+            .addCase(loginTC.fulfilled, (state, action) => {
+                state.isLoggedIn = action.payload
+            })
+            .addCase(logoutTC.fulfilled, (state, action) => {
+                state.isLoggedIn = action.payload
+            })
     }
 })
 
@@ -25,7 +74,7 @@ export const authReducer = authSlice.reducer;
 export const {setIsLoggedIn} = authSlice.actions
 
 // thunks
-export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
+/*export const loginTC_ = (data: LoginParamsType): AppThunk => (dispatch) => {
     dispatch(setAppStatus('loading'))
     authApi.login(data)
         .then((res) => {
@@ -37,8 +86,8 @@ export const loginTC = (data: LoginParamsType): AppThunk => (dispatch) => {
         .catch(e => {
             errorUtils(e, dispatch)
         })
-}
-export const logoutTC = (): AppThunk => (dispatch) => {
+}*/
+/*export const logoutTC_ = (): AppThunk => (dispatch) => {
     dispatch(setAppStatus('loading'))
     authApi.logout()
         .then(res => {
@@ -50,7 +99,7 @@ export const logoutTC = (): AppThunk => (dispatch) => {
         .catch((e) => {
             errorUtils(e, dispatch)
         })
-}
+}*/
 
 
 // types

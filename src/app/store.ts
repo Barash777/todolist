@@ -59,6 +59,7 @@ export type AppActionsType =
 
 // export type AppDispatch = typeof store.dispatch
 export type AppDispatch = ThunkDispatch<AppStateType, unknown, AppActionsType>
+// export type AppDispatch = typeof store.dispatch
 
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppStateType, unknown, AppActionsType>
 
