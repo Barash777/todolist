@@ -2,6 +2,7 @@ import {setAppStatus, setAppSuccess} from '../../app/app-reducer'
 import {authApi, LoginParamsType} from '../../api/api';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {setTodolists} from '../Todolists/todolists-reducer';
 
 const initialState = {
     isLoggedIn: false
@@ -35,6 +36,7 @@ export const logoutTC = createAsyncThunk('auth/logout', (arg, thunkAPI) => {
         .then(res => {
             if (checkWithResultCode(res, dispatch, () => {
                 // dispatch(setIsLoggedIn(false))
+                dispatch(setTodolists([]))
                 dispatch(setAppSuccess('You are successfully logout'))
             })) {
                 return false;
