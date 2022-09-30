@@ -38,6 +38,7 @@ export const Todolist = React.memo((props: PropsType) => {
         dispatch(removeTodolistTC(id))
     }, [dispatch])
     const changeTodolistTitle = useCallback((title: string) => {
+        // TODO: check previous and current title
         dispatch(updateTodolistTC(id, title))
     }, [dispatch])
     const onChangeFilterHandler = (filter: FilterValuesType) => {

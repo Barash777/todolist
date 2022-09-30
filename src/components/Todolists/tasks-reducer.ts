@@ -215,9 +215,11 @@ const tasksSlice = createSlice({
                 delete state[action.payload]
             })
             .addCase(setTodolists, (state, action) => {
+                state = {}
                 action.payload.forEach(t => {
                     state[t.id] = [];
                 })
+                return state
             })
             .addCase(getTasksTC.fulfilled, (state, action) => {
                 state[action.payload.todolistId] = action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
