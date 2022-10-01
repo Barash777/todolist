@@ -1,4 +1,4 @@
-import {addTaskTC, getTasksTC, removeTaskTC, tasksReducer, TasksStateType, updateTask} from './tasks-reducer';
+import {addTaskTC, getTasksTC, removeTaskTC, tasksReducer, TasksStateType, updateTaskTC} from './tasks-reducer';
 import {TaskPriorities, TaskStatuses} from '../../api/api';
 import {addTodolist, removeTodolist} from './todolists-reducer';
 
@@ -200,7 +200,11 @@ test('correct task should be added to correct array', () => {
 test('status of specified task should be changed', () => {
 
     const model = {status: TaskStatuses.Completed}
-    const action = updateTask({todolistId: todoId2, taskId: '2', model})
+    const action = updateTaskTC.fulfilled({todolistId: todoId2, taskId: '2', model}, '', {
+        todolistId: todoId2,
+        taskId: '2',
+        model
+    })
 
     const endState = tasksReducer(startState, action)
 
@@ -212,7 +216,11 @@ test('status of specified task should be changed', () => {
 test('title of specified task should be changed', () => {
 
     const model = {title: 'newTitle'}
-    const action = updateTask({todolistId: todoId2, taskId: '2', model})
+    const action = updateTaskTC.fulfilled({todolistId: todoId2, taskId: '2', model}, '', {
+        todolistId: todoId2,
+        taskId: '2',
+        model
+    })
     const endState = tasksReducer(startState, action)
 
     expect(startState[todoId2][1].title).toBe('milk')

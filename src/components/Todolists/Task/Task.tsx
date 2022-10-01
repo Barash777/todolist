@@ -26,7 +26,7 @@ const Task = React.memo(({task, todolistId}: TaskPropsType) => {
             return;
         }
 
-        dispatch(updateTaskTC(todolistId, task.id, {title}))
+        dispatch(updateTaskTC({todolistId, taskId: task.id, model: {title}}))
     }
 
     const onChangeTaskStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +35,7 @@ const Task = React.memo(({task, todolistId}: TaskPropsType) => {
             return;
         }*/
 
-        dispatch(updateTaskTC(todolistId, task.id, {status}))
+        dispatch(updateTaskTC({todolistId, taskId: task.id, model: {status}}))
     }, [dispatch])
 
 

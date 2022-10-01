@@ -8,46 +8,45 @@ const initialState = {
     isLoggedIn: false
 }
 
-export const loginTC = createAsyncThunk('auth/login', (data: LoginParamsType, thunkAPI) => {
+// thunks
+export const loginTC = createAsyncThunk('auth/login', async (data: LoginParamsType, thunkAPI) => {
     const {dispatch} = thunkAPI
 
     dispatch(setAppStatus('loading'))
-    return authApi.login(data)
-        .then((res) => {
-            if (checkWithResultCode(res, dispatch, () => {
-                // dispatch(setIsLoggedIn(true))
-                dispatch(setAppSuccess('You are successfully login'))
-            })) {
-                return true
-            } else {
-                return thunkAPI.rejectWithValue(res)
-            }
-        })
-        .catch(e => {
-            errorUtils(e, dispatch)
-            return thunkAPI.rejectWithValue(e)
-        })
+    try {
+        let res = await authApi.login(data);
+        if (checkWithResultCode(res, dispatch, () => {
+            // dispatch(setIsLoggedIn(true))
+            dispatch(setAppSuccess('You are successfully login'))
+        })) {
+            return true
+        } else {
+            return thunkAPI.rejectWithValue(res)
+        }
+    } catch (e: any) {
+        errorUtils(e, dispatch)
+        return thunkAPI.rejectWithValue(e)
+    }
 })
-export const logoutTC = createAsyncThunk('auth/logout', (arg, thunkAPI) => {
+export const logoutTC = createAsyncThunk('auth/logout', async (arg, thunkAPI) => {
     const {dispatch} = thunkAPI
 
     dispatch(setAppStatus('loading'))
-    return authApi.logout()
-        .then(res => {
-            if (checkWithResultCode(res, dispatch, () => {
-                // dispatch(setIsLoggedIn(false))
-                dispatch(setTodolists([]))
-                dispatch(setAppSuccess('You are successfully logout'))
-            })) {
-                return false;
-            } else {
-                return thunkAPI.rejectWithValue(res)
-            }
-        })
-        .catch((e) => {
-            errorUtils(e, dispatch)
-            return thunkAPI.rejectWithValue(e)
-        })
+    try {
+        let res = await authApi.logout();
+        if (checkWithResultCode(res, dispatch, () => {
+            // dispatch(setIsLoggedIn(false))
+            dispatch(setTodolists([]))
+            dispatch(setAppSuccess('You are successfully logout'))
+        })) {
+            return false;
+        } else {
+            return thunkAPI.rejectWithValue(res)
+        }
+    } catch (e: any) {
+        errorUtils(e, dispatch)
+        return thunkAPI.rejectWithValue(e)
+    }
 })
 
 
@@ -74,34 +73,6 @@ const authSlice = createSlice({
 export const authReducer = authSlice.reducer;
 // get AC
 export const {setIsLoggedIn} = authSlice.actions
-
-// thunks
-/*export const loginTC_ = (data: LoginParamsType): AppThunk => (dispatch) => {
-    dispatch(setAppStatus('loading'))
-    authApi.login(data)
-        .then((res) => {
-            checkWithResultCode(res, dispatch, () => {
-                dispatch(setIsLoggedIn(true))
-                dispatch(setAppSuccess('You are successfully login'))
-            })
-        })
-        .catch(e => {
-            errorUtils(e, dispatch)
-        })
-}*/
-/*export const logoutTC_ = (): AppThunk => (dispatch) => {
-    dispatch(setAppStatus('loading'))
-    authApi.logout()
-        .then(res => {
-            checkWithResultCode(res, dispatch, () => {
-                dispatch(setIsLoggedIn(false))
-                dispatch(setAppSuccess('You are successfully logout'))
-            })
-        })
-        .catch((e) => {
-            errorUtils(e, dispatch)
-        })
-}*/
 
 
 // types
