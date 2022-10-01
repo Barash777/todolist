@@ -7,6 +7,7 @@ import {TaskType, todolistApi, UpdateTaskModelType} from '../../api/api';
 import {RequestStatusType, setAppStatus, setAppSuccess} from '../../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {AppStateType} from "../../app/store";
 
 const initialState = {} as TasksStateType
 
@@ -76,47 +77,46 @@ export const addTaskTC = createAsyncThunk('tasks/addTask', async (param: { todol
         return thunkAPI.rejectWithValue(e)
     }
 })
-export const updateTaskTC = createAsyncThunk('tasks/updateTask',
-    (param: { todolistId: string, taskId: string, model: UpdateTaskModelType }, thunkAPI) => {
-        const {dispatch, getState} = thunkAPI
+export const updateTaskTC = createAsyncThunk<{ todolistId: string, taskId: string, model: UpdateTaskModelType },
+    { todolistId: string, taskId: string, model: UpdateTaskModelType },
+    { state: AppStateType }>('tasks/updateTask',
+    async (param: { todolistId: string, taskId: string, model: UpdateTaskModelType }, thunkAPI) => {
+        const {dispatch, getState, rejectWithValue} = thunkAPI
         const {todolistId, taskId, model} = param
 
-        // @ts-ignore
-        const task: TaskType = getState().tasks[todolistId].find(t => t.id === taskId)
-        // const task: TaskType = getState()
+        const task = getState().tasks[todolistId].find(t => t.id === taskId)
 
         if (task) {
             dispatch(setAppStatus('loading'))
             dispatch(changeTaskEntityStatus({todolistId, taskId, entityStatus: 'loading'}))
-            return todolistApi
-                .updateTask(todolistId, taskId, {
-                    title: task.title,
-                    deadline: task.deadline,
-                    description: task.description,
-                    priority: task.priority,
-                    status: task.status,
-                    startDate: task.startDate,
-                    ...model
-                })
-                .then((res) => {
-                    if (checkWithResultCode(res, dispatch, () => {
-                        // dispatch(updateTask({todolistId, taskId, model}))
-                    })) {
-                        return ({todolistId, taskId, model})
-                    } else {
-                        return thunkAPI.rejectWithValue(res)
-                    }
-                })
-                .catch(e => {
-                    errorUtils(e, dispatch)
-                    return thunkAPI.rejectWithValue(e)
-                })
-                .finally(() => {
-                    dispatch(changeTaskEntityStatus({todolistId, taskId, entityStatus: 'idle'}))
-                })
+            try {
+                let res = await todolistApi
+                    .updateTask(todolistId, taskId, {
+                        title: task.title,
+                        deadline: task.deadline,
+                        description: task.description,
+                        priority: task.priority,
+                        status: task.status,
+                        startDate: task.startDate,
+                        ...model
+                    })
+
+                if (checkWithResultCode(res, dispatch, () => {
+                    // dispatch(updateTask({todolistId, taskId, model}))
+                })) {
+                    return ({todolistId, taskId, model})
+                } else {
+                    return rejectWithValue(res)
+                }
+            } catch (e: any) {
+                errorUtils(e, dispatch)
+                return rejectWithValue(e)
+            } finally {
+                dispatch(changeTaskEntityStatus({todolistId, taskId, entityStatus: 'idle'}))
+            }
         }
 
-        return thunkAPI.rejectWithValue('not found task with set id')
+        return rejectWithValue('not found task with set id')
     })
 
 
