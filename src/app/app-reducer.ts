@@ -1,10 +1,31 @@
 import {authApi} from '../api/api';
-import {AppThunk} from './store';
 import {checkWithResultCode, errorUtils} from '../common/utils/error-utils';
 import {setIsLoggedIn} from '../components/Login/auth-reducer';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+
+// thunk
+export const initializeAppTC = createAsyncThunk('app/initializeApp', async (param, thunkAPI) => {
+    const {dispatch, rejectWithValue} = thunkAPI
+
+    dispatch(setAppStatus('loading'))
+    try {
+        let res = await authApi.me()
+        if (checkWithResultCode(res, dispatch, () => {
+            dispatch(setIsLoggedIn(true))
+        })) {
+            return true
+        } else {
+            return rejectWithValue(res)
+        }
+    } catch (e: any) {
+        errorUtils(e, dispatch)
+        return rejectWithValue(e)
+    } finally {
+        dispatch(setAppIsInitialized(true))
+    }
+})
 
 const initialState = {
     status: 'idle' as RequestStatusType,
@@ -46,19 +67,4 @@ export type SetAppSuccessActionType = ReturnType<typeof setAppSuccess>
 export type SetAppIsInitializedActionType = ReturnType<typeof setAppIsInitialized>
 
 
-// thunk
-export const initializeAppTC = (): AppThunk => (dispatch) => {
-    dispatch(setAppStatus('loading'))
-    authApi.me()
-        .then(res => {
-            checkWithResultCode(res, dispatch, () => {
-                dispatch(setIsLoggedIn(true))
-            })
-        })
-        .catch(e => {
-            errorUtils(e, dispatch)
-        })
-        .finally(() => {
-            dispatch(setAppIsInitialized(true))
-        })
-}
+
