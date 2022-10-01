@@ -1,8 +1,7 @@
 import {
-    appReducer,
+    appReducer, initializeAppTC,
     RequestStatusType,
     setAppError,
-    setAppIsInitialized,
     setAppStatus,
     setAppSuccess
 } from './app-reducer';
@@ -49,7 +48,7 @@ test('correct status should be set', () => {
 
 test('change isInitialized', () => {
 
-    const endState = appReducer(startState, setAppIsInitialized(true))
+    const endState = appReducer(startState, initializeAppTC.fulfilled(true, ''))
 
     expect(startState.isInitialized).toBe(false)
     expect(endState.isInitialized).toBe(true)

@@ -22,8 +22,6 @@ export const initializeAppTC = createAsyncThunk('app/initializeApp', async (para
     } catch (e: any) {
         errorUtils(e, dispatch)
         return rejectWithValue(e)
-    } finally {
-        dispatch(setAppIsInitialized(true))
     }
 })
 
@@ -47,24 +45,28 @@ const appSlice = createSlice({
         setAppSuccess(state, action: PayloadAction<null | string>) {
             state.success = action.payload
         },
-        setAppIsInitialized(state, action: PayloadAction<boolean>) {
-            state.isInitialized = action.payload
-        }
+    },
+    extraReducers: builder => {
+        builder
+            .addCase(initializeAppTC.fulfilled, (state) => {
+                state.isInitialized = true
+            })
+            .addCase(initializeAppTC.rejected, (state) => {
+                state.isInitialized = true
+            })
     }
 })
 
 export const appReducer = appSlice.reducer;
-export const {setAppStatus, setAppError, setAppSuccess, setAppIsInitialized} = appSlice.actions
+export const {setAppStatus, setAppError, setAppSuccess} = appSlice.actions
 
 // types
 export type UnionAppActionsType = SetAppStatusActionType
     | SetAppErrorActionType
     | SetAppSuccessActionType
-    | SetAppIsInitializedActionType
 export type SetAppStatusActionType = ReturnType<typeof setAppStatus>
 export type SetAppErrorActionType = ReturnType<typeof setAppError>
 export type SetAppSuccessActionType = ReturnType<typeof setAppSuccess>
-export type SetAppIsInitializedActionType = ReturnType<typeof setAppIsInitialized>
 
 
 
