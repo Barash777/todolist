@@ -18,26 +18,34 @@ export const getTodolistsTC = createAsyncThunk('todolist/getTodolists', async (_
     try {
         let res = await todolistApi.getTodolists()
         dispatch(setAppStatus('succeeded'))
-        return (res.data)
+        dispatch(setTodolists(res.data))
+        // return (res.data)
     } catch (e: any) {
         errorUtils(e, dispatch)
         return rejectWithValue(e)
     }
 })
-export const addTodolistTC = (title: string): AppThunk => (dispatch) => {
+export const addTodolistTC = createAsyncThunk('todolist/addTodolist', async (title: string, {
+    dispatch,
+    rejectWithValue
+}) => {
     dispatch(setAppStatus('loading'))
-    todolistApi
-        .createTodolist(title)
-        .then(res => {
-            checkWithResultCode(res, dispatch, () => {
-                dispatch(addTodolist(res.data.data.item))
-                dispatch(setAppSuccess('You added new todolist'))
-            })
-        })
-        .catch(e => {
-            errorUtils(e, dispatch)
-        })
-}
+    try {
+        let res = await todolistApi.createTodolist(title)
+        if (checkWithResultCode(res, dispatch, () => {
+            dispatch(setAppSuccess('You added new todolist'))
+        })) {
+            dispatch(addTodolist(res.data.data.item))
+            // return (res.data.data.item)
+        } else {
+            return rejectWithValue(res)
+        }
+    } catch (e: any) {
+        errorUtils(e, dispatch)
+        return rejectWithValue(e)
+    }
+})
+
 export const removeTodolistTC = (id: string): AppThunk => (dispatch) => {
     dispatch(setAppStatus('loading'))
     dispatch(changeTodolistEntityStatus({id, entityStatus: 'loading'}))
@@ -82,13 +90,6 @@ const todolistSlice = createSlice({
                 state.splice(index, 1)
             }
         },
-        addTodolist(state, action: PayloadAction<TodolistType>) {
-            state.unshift({
-                ...action.payload,
-                filter: 'all',
-                entityStatus: 'idle'
-            })
-        },
         changeFilter(state, action: PayloadAction<{ id: string, filter: FilterValuesType }>) {
             const index = state.findIndex(tl => tl.id === action.payload.id)
             if (index > -1) {
@@ -107,39 +108,60 @@ const todolistSlice = createSlice({
                 state[index].entityStatus = action.payload.entityStatus
             }
         },
+        addTodolist(state, action: PayloadAction<TodolistType>) {
+            state.unshift({
+                ...action.payload,
+                filter: 'all',
+                entityStatus: 'idle'
+            })
+        },
+        setTodolists(state, action: PayloadAction<TodolistType[]>) {
+            return action.payload.map(t => ({...t, filter: 'all', entityStatus: 'idle'}))
+        },
+
     },
-    extraReducers: builder => {
-        builder
+    /*extraReducers: builder => {
+        /!*builder
             .addCase(getTodolistsTC.fulfilled, (state, action) => {
                 return action.payload.map(t => ({...t, filter: 'all', entityStatus: 'idle'}))
             })
+            .addCase(addTodolistTC.fulfilled, (state, action) => {
+                state.unshift({
+                    ...action.payload,
+                    filter: 'all',
+                    entityStatus: 'idle'
+                })
+            })*!/
 
 
-    }
+    }*/
 
 })
 
 export const {
     removeTodolist,
-    addTodolist,
     changeFilter,
     changeTodolistTitle,
     changeTodolistEntityStatus,
+    setTodolists,
+    addTodolist
 } = todolistSlice.actions
 
 export const todolistsReducer = todolistSlice.reducer;
 
 export type UnionTodolistsActionType =
     RemoveTodolistActionType |
-    AddTodolistActionType |
     ChangeFilterActionType |
     ChangeTodolistTitleActionType |
-    ChangeTodolistEntityStatusActionType
+    ChangeTodolistEntityStatusActionType |
+    SetTodolistsActionType |
+    AddTodolistActionType
 
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolist>
-export type AddTodolistActionType = ReturnType<typeof addTodolist>
 export type ChangeFilterActionType = ReturnType<typeof changeFilter>
 export type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitle>
 export type ChangeTodolistEntityStatusActionType = ReturnType<typeof changeTodolistEntityStatus>
+export type SetTodolistsActionType = ReturnType<typeof setTodolists>
+export type AddTodolistActionType = ReturnType<typeof addTodolist>
 
 
