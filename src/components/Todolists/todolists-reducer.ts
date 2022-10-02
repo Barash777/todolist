@@ -1,5 +1,4 @@
 import {todolistApi, TodolistType} from '../../api/api';
-import {AppThunk} from '../../app/store';
 import {RequestStatusType, setAppStatus, setAppSuccess} from '../../app/app-reducer';
 import {checkWithResultCode, errorUtils} from '../../common/utils/error-utils';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
@@ -67,24 +66,29 @@ export const removeTodolistTC = createAsyncThunk('todolist/removeTodolist', asyn
         return rejectWithValue(e)
     }
 })
-
-export const updateTodolistTC = (id: string, title: string): AppThunk => (dispatch) => {
+export const updateTodolistTC = createAsyncThunk('todolist/updateTodolist', async (param: { id: string, title: string }, {
+    dispatch,
+    rejectWithValue
+}) => {
+    const {id, title} = param
     dispatch(setAppStatus('loading'))
     dispatch(changeTodolistEntityStatus({id, entityStatus: 'loading'}))
-    todolistApi
-        .updateTodolist(id, title)
-        .then((res) => {
-            checkWithResultCode(res, dispatch, () => {
-                dispatch(changeTodolistTitle({id, title}))
-            })
-        })
-        .catch(e => {
-            errorUtils(e, dispatch)
-        })
-        .finally(() => {
-            dispatch(changeTodolistEntityStatus({id, entityStatus: 'idle'}))
-        })
-}
+    try {
+        let res = await todolistApi.updateTodolist(id, title)
+        if (checkWithResultCode(res, dispatch, () => {
+        })) {
+            dispatch(changeTodolistTitle({id, title}))
+            // return ({id, title})
+        } else {
+            return rejectWithValue(res)
+        }
+    } catch (e: any) {
+        errorUtils(e, dispatch)
+        return rejectWithValue(e)
+    } finally {
+        dispatch(changeTodolistEntityStatus({id, entityStatus: 'idle'}))
+    }
+})
 
 const todolistSlice = createSlice({
     name: 'todolists',

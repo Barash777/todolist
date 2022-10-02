@@ -42,7 +42,7 @@ export const Todolist = React.memo((props: PropsType) => {
             return;
         }
 
-        dispatch(updateTodolistTC(id, newTitle))
+        dispatch(updateTodolistTC({id, title: newTitle}))
     }
     const onChangeFilterHandler = (filter: FilterValuesType) => {
         dispatch(changeFilter({id, filter}))
